@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>메타 확장</title>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
+	<link rel="stylesheet" href="../css/meta_tag_enhancer.css"/>
+	<script src="../js/lib/jquery-1.11.1.min.js"></script>
+	<script src="../js/lib/jquery-ui.min.js"></script>
+	<script src="../js/common.js"></script>
+</head>
+<body>
+
+<header class="gnb">
+	<div class="inner">
+		<h1><a href="#">Meta TAG Enhancer</a></h1>
+		<nav>
+			<ul>
+				<li><a href="#">대시보드</a></li>
+				<li><a href="#">메타태깅</a></li>
+				<li><a href="#">사전관리</a></li>
+				<li><a href="#">소셜분석</a></li>
+				<li class="current">
+					<a href="#">관리기능</a>
+					<div class="submenu">
+						<span class="ic"></span>
+						<a href="#">통계조회</a>
+						<a href="#" class="current">권한관리</a>
+					</div>
+				</li>
+			</ul>
+		</nav>
+		<div class="user">
+			<strong>Master</strong><span>님</span>
+			<img src="../imgs/data/@user_05.jpg" alt="사진">
+		</div>
+	</div>
+</header>
+
+<div class="contents management">
+	<div class="modHeader">
+		<h2>권한관리</h2>
+	</div>
+	<div class="tbl_bs">
+		<table>
+			<colgroup>
+				<col width="45px">
+				<col width="265px">
+				<col width="265px">
+				<col width="170px">
+				<col width="170px">
+				<col width="px">
+				<col width="65px">
+				<col width="65px">
+			</colgroup>
+			<tr>
+				<th>No</th>
+				<th>이름</th>
+				<th>아이디</th>
+				<th>소속</th>
+				<th>권한</th>
+				<th>등록일</th>
+				<th>수정</th>
+				<th>삭제</th>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>홍길동</td>
+				<td>asdfasdf@asdf.com</td>
+				<td>kth</td>
+				<td>관리자</td>
+				<td>2017/12/06</td>
+				<td><button class="btn_white">수정</button></td>
+				<td><button class="btn_white">삭제</button></td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>홍길동</td>
+				<td><input type="text" value="asdfasdf@asdf.com"></td>
+				<td>
+					<select>
+						<option value="">선택</option>
+						<option value="">kt</option>
+						<option value="">kth</option>
+					</select>
+				</td>
+				<td>
+					<select>
+						<option value="">선택</option>
+						<option value="">운영자</option>
+						<option value="">관리자</option>
+					</select>
+				</td>
+				<td>2017/12/06</td>
+				<td><button class="btn_white">저장</button></td>
+				<td><button class="btn_white">삭제</button></td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td><input type="text" value="" placeholder="입력"></td>
+				<td><input type="text" value="" placeholder="입력"></td>
+				<td>
+					<select>
+						<option value="">선택</option>
+						<option value="">kt</option>
+						<option value="">kth</option>
+					</select>
+				</td>
+				<td>
+					<select>
+						<option value="">선택</option>
+						<option value="">운영자</option>
+						<option value="">관리자</option>
+					</select>
+				</td>
+				<td>2017/12/06</td>
+				<td><button class="btn_white">저장</button></td>
+				<td><button class="btn_white">삭제</button></td>
+			</tr>
+		</table>
+		<div class="btnWrap">
+			<div class="btnRight">
+				<button>신규등록</button>
+			</div>
+		</div>
+		<div class="pagenation">
+			<a href="#" class="btn btn_first">처음으로</a>
+			<a href="#" class="btn btn_prev">이전페이지</a>
+			<a href="#">1</a>
+			<a href="#" class="current">2</a>
+			<a href="#">3</a>
+			<a href="#">4</a>
+			<a href="#">5</a>
+			<a href="#">6</a>
+			<a href="#">7</a>
+			<a href="#">8</a>
+			<a href="#">9</a>
+			<a href="#">10</a>
+			<a href="#" class="btn btn_next">다음페이지</a>
+			<a href="#" class="btn btn_last">마지막페이지</a>
+		</div>
+	</div>
+</div><!-- //contents -->
+
+</body>
+</html>

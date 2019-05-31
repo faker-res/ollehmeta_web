@@ -1,0 +1,8 @@
+실행/개발을 위해 필요한 것(설정)
+
+개발용
+-Dspring.profiles.active=dev
+
+상용
+
+-Dspring.profiles.active=prd

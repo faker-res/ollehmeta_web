@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>메타 확장</title>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
+	<link rel="stylesheet" href="../css/meta_tag_enhancer.css"/>
+	<script src="../js/lib/jquery-1.11.1.min.js"></script>
+	<script src="../js/lib/jquery-ui.min.js"></script>
+	<script src="../js/common.js"></script>
+</head>
+<body>
+
+<header class="gnb">
+	<div class="inner">
+		<h1><a href="#">Meta TAG Enhancer</a></h1>
+		<nav>
+			<ul>
+				<li><a href="#">대시보드</a></li>
+				<li class="current"><a href="#">메타태깅</a></li>
+				<li><a href="#">사전관리</a></li>
+				<li><a href="#">소셜분석</a></li>
+				<li>
+					<a href="#">관리기능</a>
+					<div class="submenu">
+						<span class="ic"></span>
+						<a href="#">통계조회</a>
+						<a href="#">권한관리</a>
+					</div>
+				</li>
+			</ul>
+		</nav>
+		<div class="user">
+			<strong>Master</strong><span>님</span>
+			<img src="../imgs/data/@user_05.jpg" alt="사진">
+		</div>
+	</div>
+</header>
+
+<div class="contents metaTagging">
+	<div class="searchCond">
+		<h2>검색조건</h2>
+		<div class="inner">
+			<dl class="sort">
+				<dt>분류</dt>
+				<dd>
+					<div class="selbox" id="selType">
+						<a href="#">전체</a>
+						<ul>
+							<li><a href="#">영화전체</a></li>
+							<li><a href="#">한국영화</a></li>
+							<li><a href="#">해외영화</a></li>
+							<li><a href="#">시리즈</a></li>
+						</ul>
+					</div>
+				</dd>
+			</dl>
+			<dl class="stat">
+				<dt>상태</dt>
+				<dd>
+					<div class="selbox" id="selType">
+						<a href="#">전체</a>
+						<ul>
+							<li><a href="#">수집실패</a></li>
+							<li><a href="#">추출실패</a></li>
+							<li><a href="#">승인대기</a></li>
+							<li><a href="#">승인완료</a></li>
+						</ul>
+					</div>
+				</dd>
+			</dl>
+			<dl class="getDate">
+				<dt>입수일</dt>
+				<dd>
+					<button class="btn_allday">전체</button>
+					<input type="text" id="datepicker1">
+					~
+					<input type="text" id="datepicker2">
+				</dd>
+			</dl>
+			<dl class="keyword">
+				<dt>키워드</dt>
+				<dd><input type="text" placeholder="입력"></dd>
+			</dl>
+			<div class="check">
+				<label for="chk_001">
+					<input type="checkbox" id="chk_001">
+					<span class="ic"></span>
+					<span class="txt">제목</span>
+				</label>
+				<label for="chk_002">
+					<input type="checkbox" id="chk_002">
+					<span class="ic"></span>
+					<span class="txt">장르</span>
+				</label>
+				<label for="chk_003">
+					<input type="checkbox" id="chk_003">
+					<span class="ic"></span>
+					<span class="txt">감독</span>
+				</label>
+				<label for="chk_004">
+					<input type="checkbox" id="chk_004">
+					<span class="ic"></span>
+					<span class="txt">주연</span>
+				</label>
+				<label for="chk_005">
+					<input type="checkbox" id="chk_005">
+					<span class="ic"></span>
+					<span class="txt">줄거리</span>
+				</label>
+				<label for="chk_006">
+					<input type="checkbox" id="chk_006">
+					<span class="ic"></span>
+					<span class="txt">시간적배경</span>
+				</label>
+				<label for="chk_007">
+					<input type="checkbox" id="chk_007">
+					<span class="ic"></span>
+					<span class="txt">공간적배경</span>
+				</label>
+				<label for="chk_008">
+					<input type="checkbox" id="chk_008">
+					<span class="ic"></span>
+					<span class="txt">주제/소재</span>
+				</label>
+				<label for="chk_009">
+					<input type="checkbox" id="chk_009">
+					<span class="ic"></span>
+					<span class="txt">인물/캐릭터</span>
+				</label>
+				<label for="chk_010">
+					<input type="checkbox" id="chk_010">
+					<span class="ic"></span>
+					<span class="txt">감성/분위기</span>
+				</label>
+				<label for="chk_011">
+					<input type="checkbox" id="chk_011">
+					<span class="ic"></span>
+					<span class="txt">수상정보</span>
+				</label>
+				<label for="chk_012">
+					<input type="checkbox" id="chk_012">
+					<span class="ic"></span>
+					<span class="txt">검색키워드</span>
+				</label>
+				<label for="chk_013">
+					<input type="checkbox" id="chk_013">
+					<span class="ic"></span>
+					<span class="txt">서브장르</span>
+				</label>
+				<label for="chk_014">
+					<input type="checkbox" id="chk_014">
+					<span class="ic"></span>
+					<span class="txt">추천대상</span>
+				</label>
+				<label for="chk_015">
+					<input type="checkbox" id="chk_015">
+					<span class="ic"></span>
+					<span class="txt">추천상황</span>
+				</label>
+			</div>
+		</div>
+		<button class="btn_result">결과조회</button>
+	</div><!-- //searchCond -->
+
+	<div class="inquiryResult">
+		<h3>조회 결과</h3>
+		<div class="total">총 <strong>80</strong> 편 중</div>
+		<div class="inner">
+			<dl>
+				<dt>수집실패</dt>
+				<dd>
+					<strong>20</strong>건
+					<button class="btn_view">보기</button>
+				</dd>
+			</dl>
+			<dl>
+				<dt>수집실패</dt>
+				<dd>
+					<strong>20</strong>건
+					<button class="btn_view">보기</button>
+				</dd>
+			</dl>
+			<dl>
+				<dt>수집실패</dt>
+				<dd>
+					<strong>20</strong>건
+					<button class="btn_view">보기</button>
+				</dd>
+			</dl>
+			<dl>
+				<dt>수집실패</dt>
+				<dd>
+					<strong>20</strong>건
+					<button class="btn_view">보기</button>
+				</dd>
+			</dl>
+		</div>
+	</div><!-- //inquiryResult -->
+
+	<div class="tbl_bs">
+		<table>
+			<colgroup>
+				<col width="45px">
+				<col width="">
+				<col width="135px">
+				<col width="62px">
+				<col width="62px">
+				<col width="68px">
+				<col width="68px">
+				<col width="62px">
+				<col width="62px">
+				<col width="62px">
+				<col width="62px">
+				<col width="62px">
+			</colgroup>
+			<tr>
+				<th class="dv"><input type="checkbox"></th>
+				<th>제목</th>
+				<th>CID&SID</th>
+				<th class="dv">분류</th>
+				<th>태깅차수</th>
+				<th>입수일자</th>
+				<th>처리일자</th>
+				<th class="dv">처리상태</th>
+				<th class="bg1">재수집</th>
+				<th class="bg1">재추출</th>
+				<th class="bg1">승인대기</th>
+				<th class="bg1">상세조회</th>
+			</tr>
+			<tr>
+				<td class="dv"><input type="checkbox"></td>
+				<td class="left">제목입니다.</td>
+				<td>06000079700001</td>
+				<td class="dv">외국영화</td>
+				<td>1</td>
+				<td>17/12/06</td>
+				<td>17/10/23</td>
+				<td class="dv">수집실패</td>
+				<td><button class="btn_white">수집</button></td>
+				<td><button class="btn_white">추출</button></td>
+				<td><button class="btn_white">승인</button></td>
+				<td><button class="btn_white" onclick="javascript:layerAction('ly_autopop_01');">조회</button></td>
+			</tr>
+			<tr>
+				<td class="dv"><input type="checkbox"></td>
+				<td class="left">제목입니다.제목입니다.제목입니다.</td>
+				<td>06000079700001</td>
+				<td class="dv">외국영화</td>
+				<td>1</td>
+				<td>17/12/06</td>
+				<td>17/10/23</td>
+				<td class="dv">수집실패</td>
+				<td><button class="btn_white">수집</button></td>
+				<td><button class="btn_white">추출</button></td>
+				<td><button class="btn_white">승인</button></td>
+				<td><button class="btn_white">조회</button></td>
+			</tr>
+			<tr>
+				<td class="dv"><input type="checkbox"></td>
+				<td class="left">제목입니다.</td>
+				<td>06000079700001</td>
+				<td class="dv">외국영화</td>
+				<td>1</td>
+				<td>17/12/06</td>
+				<td>17/10/23</td>
+				<td class="dv">수집실패</td>
+				<td><button class="btn_white">수집</button></td>
+				<td><button class="btn_white">추출</button></td>
+				<td><button class="btn_white">승인</button></td>
+				<td><button class="btn_white">조회</button></td>
+			</tr>
+			<tr>
+				<td class="dv"><input type="checkbox"></td>
+				<td class="left">제목입니다.</td>
+				<td>06000079700001</td>
+				<td class="dv">외국영화</td>
+				<td>1</td>
+				<td>17/12/06</td>
+				<td>17/10/23</td>
+				<td class="dv">수집실패</td>
+				<td><button class="btn_white">수집</button></td>
+				<td><button class="btn_white">추출</button></td>
+				<td><button class="btn_white">승인</button></td>
+				<td><button class="btn_white">조회</button></td>
+			</tr>
+		</table>
+		<div class="btnWrap">
+			<div class="btnLeft">
+				<button>수집</button>
+				<button class="disabled">추출</button>
+				<button>승인</button>
+			</div>
+		</div>
+		<div class="pagenation">
+			<a href="#" class="btn btn_first">처음으로</a>
+			<a href="#" class="btn btn_prev">이전페이지</a>
+			<a href="#">1</a>
+			<a href="#" class="current">2</a>
+			<a href="#">3</a>
+			<a href="#">4</a>
+			<a href="#">5</a>
+			<a href="#">6</a>
+			<a href="#">7</a>
+			<a href="#">8</a>
+			<a href="#">9</a>
+			<a href="#">10</a>
+			<a href="#" class="btn btn_next">다음페이지</a>
+			<a href="#" class="btn btn_last">마지막페이지</a>
+		</div>
+	</div>
+</div><!-- //contents -->
+
+<!-- 레이어 팝업 -->
+<div id="ly_autopop_01" class="mod_layer" style="display: none;">
+	<div class="layInner">
+		<div class="layTop">
+			<div class="tag_wrap">
+				<span class="num">12</span>
+				<button class="btn_repair">이전 태그 복구</button>
+				<!-- <button class="btn_repair" disabled="disabled">이전 태그 복구</button> -->
+			</div>
+			<div class="thumbnail"><img src="../imgs/data/@thumb_poster.jpg" alt="포스터"></div>
+			<div class="inner">
+				<h5>라이언 일병 구하기 <span class="eng">Saving Private Ryan, 1998</span></h5>
+				<div class="detail_info">
+					<dl>
+						<dt>장르</dt>
+						<dd>전쟁, 액션, 드라마</dd>
+					</dl>
+					<dl>
+						<dt>감독</dt>
+						<dd>스티븐 스필버그</dd>
+					</dl>
+					<dl>
+						<dt>출연</dt>
+						<dd>톰 행크스, 맷데이먼, 홍길동, 기타등등</dd>
+					</dl>
+				</div>
+				<div class="story"> 1944년 6월 6일 노르망디 상륙 작전. 오마하 해변에 대기하고 있던 병사들은 한치 앞도 내다볼 수 없는 긴장된 상황과 두려움에 무기력함을 감출 수 없었다. 노르망디 해변을 응시하는 밀러 대위(Captain Miller: 톰 행크스 분) 그리고 전쟁 중 가장 어려운 임무를 수행해야할 두려움에 지친 그의 대원들. 지옥을 방불케하는 치열한 총격전이 벌어지고 수 많은 병사들이 총 한번 제대로 쏘지 못하고 쓰러져간다. 마침내 밀러 대위를 ... </div>
+			</div>
+		</div><!-- //.layTop -->
+		<div class="layCont">
+			<div class="act-tabform">
+				<div class="mod_comTab act-tab">
+					<ul>
+						<li class="on"><a href="#lypop_tab1" onclick="return false;">메타관리</a></li>
+						<li><a href="#lypop_tab2" onclick="return false;">미분류</a></li>
+						<li><a href="#lypop_tab3" onclick="return false;">수상정보</a></li>
+						<li><a href="#lypop_tab4" onclick="return false;">씨네21</a></li>
+						<li><a href="#lypop_tab5" onclick="return false;">CCUBE</a></li>
+					</ul>
+				</div>
+
+				<div id="lypop_tab1" class="act-tabCn on">
+					<div class="editwrap">
+						<div class="remarks">
+							<div><span class="bgc_1"></span>중복 추출 태그</div>
+							<div><span class="bgc_2"></span>기존 한정 태그</div>
+							<div><span class="bgc_3"></span>신규 추출 태그</div>
+						</div>
+						<dl>
+							<dt>시간적 배경</dt>
+							<dd>
+								<span class="tag">
+									<a href="#" class="txt">노르망디 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<div class="sortWrap">
+										<ul>
+											<li>
+												<label for="ra_sort_1-1">
+													시간적 배경
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_1-1" name="ra_sort_1">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_1-2">
+													공간적 배경
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_1-2" name="ra_sort_1">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_1-3">
+													주제/소재
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_1-3" name="ra_sort_1">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_1-4">
+													인물/캐릭터
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_1-4" name="ra_sort_1">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_1-5">
+													감성/분위기
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_1-5" name="ra_sort_1">
+														<span></span>
+													</div>
+												</label>
+											</li>
+										</ul>
+									</div><!-- //.sortWrap -->
+								</span>
+								<span class="tag">
+									<a href="#" class="txt">전쟁 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<div class="sortWrap">
+										<ul>
+											<li>
+												<label for="ra_sort_2-1">
+													시간적 배경
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_2-1" name="ra_sort_2">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_2-2">
+													공간적 배경
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_2-2" name="ra_sort_2">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_2-3">
+													주제/소재
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_2-3" name="ra_sort_2">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_2-4">
+													인물/캐릭터
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_2-4" name="ra_sort_2">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_2-5">
+													감성/분위기
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_2-5" name="ra_sort_2">
+														<span></span>
+													</div>
+												</label>
+											</li>
+										</ul>
+									</div><!-- //.sortWrap -->
+								</span>
+								<span class="tag">
+									<a href="#" class="txt">2차세계대전 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<div class="sortWrap">
+										<ul>
+											<li>
+												<label for="ra_sort_3-1">
+													시간적 배경
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_3-1" name="ra_sort_3">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_3-2">
+													공간적 배경
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_3-2" name="ra_sort_3">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_3-3">
+													주제/소재
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_3-3" name="ra_sort_3">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_3-4">
+													인물/캐릭터
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_3-4" name="ra_sort_3">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_3-5">
+													감성/분위기
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_3-5" name="ra_sort_3">
+														<span></span>
+													</div>
+												</label>
+											</li>
+										</ul>
+									</div><!-- //.sortWrap -->
+								</span>
+								<span class="tag_add">
+									<a href="#" class="btn_add">추가</a>
+								</span>
+							</dd>
+						</dl>
+						<dl>
+							<dt>공간적 배경</dt>
+							<dd>
+								<span class="tag bgc_4">
+									<a href="#" class="txt">노르망디 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag bgc_3">
+									<a href="#" class="txt">전쟁 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag bgc_2">
+									<a href="#" class="txt">2차세계대전 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag">
+									<a href="#" class="txt">2차세계대전 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag">
+									<a href="#" class="txt">2차세계대전 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag">
+									<a href="#" class="txt">2차세계대전 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag">
+									<a href="#" class="txt">2차세계대전 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag">
+									<a href="#" class="txt">2차세계대전 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag">
+									<a href="#" class="txt">2차세계대전 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag_add">
+									<a href="#" class="btn_add">추가</a>
+								</span>
+							</dd>
+						</dl>
+						<dl>
+							<dt>주제/소재</dt>
+							<dd>
+								<span class="tag">
+									<a href="#" class="txt">전쟁 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag_add">
+									<a href="#" class="btn_add">추가</a>
+								</span>
+							</dd>
+						</dl>
+						<dl>
+							<dt>인물/캐릭터</dt>
+							<dd>
+								<span class="tag">
+									<a href="#" class="txt">전쟁 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag_add">
+									<a href="#" class="btn_add">추가</a>
+								</span>
+							</dd>
+						</dl>
+						<dl>
+							<dt>감성/분위기</dt>
+							<dd>
+								<span class="tag">
+									<a href="#" class="txt">전쟁 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag_add">
+									<a href="#" class="btn_add">추가</a>
+								</span>
+								<div class="subtag">
+									<dl>
+										<dt>장르감성어</dt>
+										<dd>
+											<label for="subtag_1-1">
+												<input type="checkbox" id="subtag_1-1">
+												<span>감명적인</span>
+											</label>
+											<label for="subtag_1-2">
+												<input type="checkbox" id="subtag_1-2">
+												<span>감탄하는</span>
+											</label>
+											<label for="subtag_1-3">
+												<input type="checkbox" id="subtag_1-3">
+												<span>감격스러운</span>
+											</label>
+											<label for="subtag_1-4">
+												<input type="checkbox" id="subtag_1-4">
+												<span>낭만적인</span>
+											</label>
+											<label for="subtag_1-5">
+												<input type="checkbox" id="subtag_1-5">
+												<span>감미로운</span>
+											</label>
+											<label for="subtag_1-6">
+												<input type="checkbox" id="subtag_1-6">
+												<span>감상적인</span>
+											</label>
+											<button class="btn_add_txt">추가</button>
+										</dd>
+									</dl>
+									<dl>
+										<dt>SNS감성어</dt>
+										<dd>
+											<label for="subtag_2-1">
+												<input type="checkbox" id="subtag_2-1">
+												<span>감성어</span>
+											</label>
+											<label for="subtag_2-2">
+												<input type="checkbox" id="subtag_2-2">
+												<span>감성어</span>
+											</label>
+											<label for="subtag_2-3">
+												<input type="checkbox" id="subtag_2-3">
+												<span>감성어</span>
+											</label>
+											<label for="subtag_2-4">
+												<input type="checkbox" id="subtag_2-4">
+												<span>감성어</span>
+											</label>
+											<label for="subtag_2-5">
+												<input type="checkbox" id="subtag_2-5">
+												<span>감성어</span>
+											</label>
+											<label for="subtag_2-6">
+												<input type="checkbox" id="subtag_2-6">
+												<span>감성어</span>
+											</label>
+											<button class="btn_add_txt">추가</button>
+										</dd>
+									</dl>
+									<dl>
+										<dt>감성유의어</dt>
+										<dd>
+											<label for="subtag_3-1">
+												<input type="checkbox" id="subtag_3-1">
+												<span>감성어</span>
+											</label>
+											<label for="subtag_3-2">
+												<input type="checkbox" id="subtag_3-2">
+												<span>감성어</span>
+											</label>
+											<label for="subtag_3-3">
+												<input type="checkbox" id="subtag_3-3">
+												<span>감성어</span>
+											</label>
+											<label for="subtag_3-4">
+												<input type="checkbox" id="subtag_3-4">
+												<span>감성어</span>
+											</label>
+											<label for="subtag_3-5">
+												<input type="checkbox" id="subtag_3-5">
+												<span>감성어</span>
+											</label>
+											<label for="subtag_3-6">
+												<input type="checkbox" id="subtag_3-6">
+												<span>감성어</span>
+											</label>
+											<button class="btn_add_txt">추가</button>
+										</dd>
+									</dl>
+								</div>
+							</dd>
+						</dl>
+						<hr>
+						<dl>
+							<dt>서브 장르</dt>
+							<dd>
+								<span class="tag">
+									<a href="#" class="txt">노르망디 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag_add">
+									<a href="#" class="btn_add">추가</a>
+								</span>
+							</dd>
+						</dl>
+						<dl>
+							<dt>검색 키워드</dt>
+							<dd>
+								<span class="tag">
+									<a href="#" class="txt">노르망디 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag_add">
+									<a href="#" class="btn_add">추가</a>
+								</span>
+							</dd>
+						</dl>
+						<dl>
+							<dt>캐릭터명</dt>
+							<dd>
+								<span class="tag">
+									<a href="#" class="txt">노르망디 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag_add">
+									<a href="#" class="btn_add">추가</a>
+								</span>
+							</dd>
+						</dl>
+						<hr>
+						<dl>
+							<dt>추천대상</dt>
+							<dd>
+								<span class="tag">
+									<a href="#" class="txt">노르망디 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag_add">
+									<a href="#" class="btn_add">추가</a>
+								</span>
+							</dd>
+						</dl>
+						<dl>
+							<dt>추천상황</dt>
+							<dd>
+								<span class="tag">
+									<a href="#" class="txt">노르망디 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag_add">
+									<a href="#" class="btn_add">추가</a>
+								</span>
+							</dd>
+						</dl>
+						<hr>
+						<dl>
+							<dt>추출주기</dt>
+							<dd>
+								<div class="selbox" id="selType">
+									<a href="#">6개월마다</a>
+									<ul>
+										<li><a href="#">6개월마다</a></li>
+										<li><a href="#">1년마다</a></li>
+										<li><a href="#">설정안함</a></li>
+									</ul>
+								</div>
+							</dd>
+						</dl>
+					</div>
+					<div class="btnWrap btnBig center">
+						<button>닫기</button>
+						<button>승인</button>
+						<button>재수집</button>
+						<button>재추출</button>
+					</div>
+				</div><!-- //메타관리 -->
+
+				<div id="lypop_tab2" class="act-tabCn">
+					<div class="editwrap notSort">
+						<dl>
+							<!-- <dt></dt> -->
+							<dd>
+								<span class="tag">
+									<a href="#" class="txt">노르망디 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<div class="sortWrap">
+										<ul>
+											<li>
+												<label for="ra_sort_11-1">
+													시간적 배경
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_11-1" name="ra_sort_11">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_11-2">
+													공간적 배경
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_11-2" name="ra_sort_11">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_11-3">
+													주제/소재
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_11-3" name="ra_sort_11">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_11-4">
+													인물/캐릭터
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_11-4" name="ra_sort_11">
+														<span></span>
+													</div>
+												</label>
+											</li>
+											<li>
+												<label for="ra_sort_11-5">
+													감성/분위기
+													<div class="radiobtn">
+														<input type="radio" id="ra_sort_11-5" name="ra_sort_11">
+														<span></span>
+													</div>
+												</label>
+											</li>
+										</ul>
+									</div><!-- //.sortWrap -->
+								</span>
+								<span class="tag">
+									<a href="#" class="txt">전쟁 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+								<span class="tag">
+									<a href="#" class="txt">2차세계대전 <em>7.7</em></a>
+									<a href="#" class="btn_del">삭제</a>
+									<!-- sortWrap -->
+								</span>
+							</dd>
+						</dl>
+					</div>
+					<div class="btnWrap btnBig center">
+						<button>닫기</button>
+						<button>승인</button>
+						<button disabled="disabled">재수집</button>
+						<button disabled="disabled">재추출</button>
+					</div>
+				</div><!-- //미분류 -->
+
+				<div id="lypop_tab3" class="act-tabCn">
+					<div class="award_info">
+						<div class="main_detail">
+							<h4 class="tit_movie">
+								<a href="#">18회 올해의 여성영화인상, 2017</a>
+							</h4>
+							<div class="info_produce #award">
+								<dl class="list_produce">
+									<dt>수상</dt>
+									<dd>
+										<span class="info_person">
+											<a href="#" class="link_person #click">박은경</a>
+											(제작자상)
+										</span>
+									</dd>
+								</dl>
+							</div>
+
+							<h4 class="tit_movie">
+								<a href="#">17회 디렉터스 컷 어워즈, 2017</a>
+							</h4>
+							<div class="info_produce #award">
+								<dl class="list_produce">
+									<dt>수상</dt>
+									<dd>
+										<span class="info_person">
+											<a href="#" class="link_person #click">최귀화</a>
+											(올해의 신인남자연기상)
+										</span>
+										<span class="info_person">
+											<a href="#" class="link_person #click">장훈</a>
+											(올해의 특별언급)
+										</span>
+									</dd>
+								</dl>
+							</div>
+
+							<h4 class="tit_movie">
+								<a href="#">38회 청룡영화상, 2017</a>
+							</h4>
+							<div class="info_produce #award">
+								<dl class="list_produce">
+									<dt>수상</dt>
+									<dd>
+										<span class="info_person">
+											<span class="txt_award">최우수작품상</span>
+										</span>
+										<span class="info_person">
+											<a href="/person/main?personId=561" class="link_person #click">송강호</a>
+											(남우주연상)
+										</span>
+										<span class="info_person">
+											<a href="/person/main?personId=1237" class="link_person #click">조영욱</a>
+											(음악상)
+										</span>
+										<span class="info_person">
+											<span class="txt_award">한국영화최다관객상</span>
+										</span>
+									</dd>
+								</dl>
+
+								<dl class="list_produce">
+									<dt>후보</dt>
+									<dd>
+										<span class="info_person">
+											<a href="/person/main?personId=80611" class="link_person #click">장훈</a>
+											(감독상)
+										</span>
+										<span class="info_person">
+											<a href="/person/main?personId=2686" class="link_person #click">유해진</a>
+											(남우조연상)
+										</span>
+										<span class="info_person">
+											<a href="/person/main?personId=405308" class="link_person #click">류준열</a>
+											(신인남우상)
+										</span>
+										<span class="info_person">
+											<a href="/person/main?personId=381379" class="link_person #click">엄유나</a>
+											(각본상)
+										</span>
+										<span class="info_person">
+											<a href="/person/main?personId=38373" class="link_person #click">조화성</a>
+											(미술상)
+										</span>
+									</dd>
+								</dl>
+							</div>
+
+						</div><!-- //.main_detail -->
+					</div><!-- //.award_info -->
+					<div class="btnWrap btnBig center">
+						<button>닫기</button>
+						<button disabled="disabled">승인</button>
+						<button disabled="disabled">재수집</button>
+						<button disabled="disabled">재추출</button>
+					</div>
+				</div><!-- //수상정보 -->
+
+				<div id="lypop_tab4" class="act-tabCn">
+					<div class="cine21">
+						<span>노르망디</span>
+						<span>병사</span>
+						<span>일병</span>
+						<span>2차세계대전</span>
+						<span>실화 바탕 드라마</span>
+						<span>군인 드라마</span>
+						<span>전우애</span>
+						<span>임무</span>
+						<span>노르망디</span>
+						<span>병사</span>
+						<span>일병</span>
+						<span>2차세계대전</span>
+						<span>실화 바탕 드라마</span>
+						<span>군인 드라마</span>
+						<span>전우애</span>
+						<span>임무</span>
+						<span>노르망디</span>
+						<span>병사</span>
+						<span>일병</span>
+						<span>2차세계대전</span>
+						<span>실화 바탕 드라마</span>
+						<span>군인 드라마</span>
+						<span>전우애</span>
+						<span>임무</span>
+					</div>
+					<div class="btnWrap btnBig center">
+						<button>닫기</button>
+						<button disabled="disabled">승인</button>
+						<button disabled="disabled">재수집</button>
+						<button disabled="disabled">재추출</button>
+					</div>
+				</div><!-- //씨네21 -->
+
+				<div id="lypop_tab5" class="act-tabCn">
+					<div class="ccube">
+						<div class="leftWrap">
+							<dl>
+								<dt>시리즈 ID</dt>
+								<dd></dd>
+							</dl>
+							<dl>
+								<dt>콘텐츠 ID</dt>
+								<dd>10024421680001</dd>
+							</dl>
+							<dl>
+								<dt>마스터 ID</dt>
+								<dd>1002442168</dd>
+							</dl>
+							<dl>
+								<dt>영진위 ID</dt>
+								<dd>20151234</dd>
+							</dl>
+							<dl>
+								<dt>제작국가</dt>
+								<dd>HKG</dd>
+							</dl>
+							<dl>
+								<dt>제작년도</dt>
+								<dd>2015</dd>
+							</dl>
+							<dl>
+								<dt>국내개봉일</dt>
+								<dd>2017-12-12</dd>
+							</dl>
+							<dl>
+								<dt>KT 시청등급</dt>
+								<dd>15세이상</dd>
+							</dl>
+						</div>
+						<div class="rightWrap">
+							<dl>
+								<dt>수급 카테고리</dt>
+								<dd>영화 > 외국영화</dd>
+							</dl>
+							<dl>
+								<dt>시리즈 수급명</dt>
+								<dd></dd>
+							</dl>
+							<dl>
+								<dt>콘텐츠 수급명</dt>
+								<dd>극장판 파워레인저: 애니멀포스 VS 닌자포스 미래에서 온 메시지</dd>
+							</dl>
+							<dl>
+								<dt>콘텐츠 노출제목</dt>
+								<dd>극장판 파워레인저: 애니멀포스 VS 닌자포스 미래에서 온 메시지</dd>
+							</dl>
+							<dl>
+								<dt>콘텐츠 줄임제목</dt>
+								<dd>극장판 파워레인저2</dd>
+							</dl>
+							<dl>
+								<dt>콘텐츠 영문제목</dt>
+								<dd>Murder on the Orient Express, 2017</dd>
+							</dl>
+							<dl>
+								<dt>정렬제목</dt>
+								<dd>소림배구</dd>
+							</dl>
+							<dl>
+								<dt>감독</dt>
+								<dd>토니 탕</dd>
+							</dl>
+							<dl>
+								<dt>출연</dt>
+								<dd>케네스 브래너, 페넬로페 크루즈, 윌렘 대포, 주디 덴치, 조니 뎁, 조시 게드, 데릭 제이코비, 레슬리 오덤 주니어, 미셸 파이퍼</dd>
+							</dl>
+						</div>
+					</div>
+					<div class="btnWrap btnBig center">
+						<button>닫기</button>
+						<button disabled="disabled">승인</button>
+						<button disabled="disabled">재수집</button>
+						<button disabled="disabled">재추출</button>
+					</div>
+				</div><!-- //CCUBE -->
+			</div>
+			<!-- //.act-tabform 탭 -->
+		</div><!-- //.layCont -->
+		<a href="javascript:layerAction('ly_autopop_01')" class="btn_close">닫기</a>
+	</div>
+</div>
+<!-- //레이어 팝업 -->
+
+</body>
+</html>

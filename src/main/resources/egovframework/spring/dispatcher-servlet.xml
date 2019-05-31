@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+                http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd" >
+
+    <mvc:annotation-driven />
+    <!--resources 설정 begins-->
+
+    <!--기본 Resources Mapping-->
+    <mvc:resources mapping="/css/**" location="/resources/css/" />
+    <mvc:resources mapping="/js/**" location="/resources/js/" />
+    <mvc:resources mapping="/daisy/**" location="/resources/daisy/" />
+    <mvc:resources mapping="/img/**" location="/resources/images/img/" />
+    <mvc:resources mapping="/fonts/**" location="/resources/fonts/" />
+    <mvc:resources mapping="/resources/**" location="/resources/" />
+
+    <!-- REST API javaDoc Swagger -->
+    <mvc:resources mapping="/swagger-ui.html" location="classpath:/META-INF/resources/"/>
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+
+    <!--resources 설정 ends-->
+
+    <mvc:view-controller path="cmmn/validator.do" view-name="egovframework/cmmn/validator" />
+
+
+    <context:component-scan base-package="egovframework,egovframework.daisyinsight">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository" />
+    </context:component-scan>
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="webBindingInitializer">
+            <bean class="egovframework.example.cmmn.web.EgovBindingInitializer" />
+        </property>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <property name="interceptors">
+            <list>
+                <ref bean="localeChangeInterceptor" />
+            </list>
+        </property>
+    </bean>
+
+    <!--mvc 인터셉터 설정-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!-- 모든 URL 요청 mvc 인터셉터를 거치게 하도록 정의 -->
+            <mvc:mapping path="/**/*" />
+            <!-- 현재 모든 페이지 허용 (swkim)
+			<mvc:exclude-mapping path="/**/*"/>-->
+
+            <!--mvc 인터셉터를 거치지 않고 예외 시킬 URL 요청들 정의 -->
+            <mvc:exclude-mapping path="/login**" />
+            <mvc:exclude-mapping path="/js/**" />
+            <mvc:exclude-mapping path="/css/**" />
+            <mvc:exclude-mapping path="/img/**" />
+            <mvc:exclude-mapping path="/fonts/**" />
+            <mvc:exclude-mapping path="/daisy/**" />
+            <mvc:exclude-mapping path="/resource/**" />
+
+            <bean class="egovframework.daisyinsight.common.base.LoginCheckIntercepter"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+    <!-- 쿠키를 이용한 Locale 이용시 <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/> -->
+
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="language" />
+    </bean>
+
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.springframework.dao.DataAccessException">/common/errorSystem</prop>
+                <prop key="org.springframework.transaction.TransactionException">/common/errorSystem</prop>
+                <prop key="egovframework.rte.fdl.cmmn.exception.EgovBizException">/common/errorSystem</prop>
+                <prop key="org.springframework.security.AccessDeniedException">/common/errorDelay</prop>
+                <prop key="defaultErrorView">common/errorSystem</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+    <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver"
+          p:order="1"
+          p:viewClass="org.springframework.web.servlet.view.JstlView"
+          p:prefix="/WEB-INF/jsp/"
+          p:suffix=".jsp"
+          p:contentType="text/html; charset=UTF-8" />
+
+
+
+    <!-- json view 설정 -->
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0" id="viewResolver" />
+    <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" id="jsonView">
+        <property name="contentType" value="application/json;charset=UTF-8" />
+    </bean>
+
+    <!-- For Pagination Tag -->
+    <bean id="imageRenderer" class="egovframework.example.cmmn.web.EgovImgPaginationRenderer" />
+
+    <bean id="paginationManager" class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager">
+        <property name="rendererType">
+            <map>
+                <entry key="image" value-ref="imageRenderer" />
+            </map>
+        </property>
+    </bean>
+    <!-- /For Pagination Tag -->
+
+
+
+
+</beans>

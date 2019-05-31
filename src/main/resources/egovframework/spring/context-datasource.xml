@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                                    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                                                    http://www.springframework.org/schema/jdbc
+                                                    http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<util:properties id="config" location="classpath:/properties/globals-#{systemProperties['spring.profiles.active']}.properties"/>
+	<util:properties id="dataSourceConfig" location="classpath:/properties/globals-#{systemProperties['spring.profiles.active']}.properties"/>
+
+	<!-- properties 설정값 가져오기
+	<util:properties id="dataSourceConfig" location="classpath:/properties/globals-#{systemProperties['spring.profiles.active']}.properties"/>
+
+	&lt;!&ndash; mysql &ndash;&gt;
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="#{dataSourceConfig['Globals.DriverClassName']}" />
+		<property name="url" value="#{dataSourceConfig['Globals.Url']}" />
+		<property name="username" value="#{dataSourceConfig['Globals.UserName']}" />
+		<property name="password" value="#{dataSourceConfig['Globals.Password']}" />
+		<property name="initialSize" value="10" />
+		<property name="maxActive" value="8" />
+		<property name="maxIdle" value="10" />
+		<property name="maxWait" value="10000" />
+		<property name="minIdle" value="10" />
+	</bean>-->
+
+	<!--내장 HSQLB  -->
+	<jdbc:embedded-database id="dataSource" type="HSQL">
+		<jdbc:script location="classpath:/egovframework/db/example/sampledb.sql"/>
+	</jdbc:embedded-database>
+	 
+
+    
+    <!-- oracle
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@db1:1521:egovfrm"/>
+        <property name="username" value="rte"/>
+        <property name="password" value="rte01"/>
+    </bean>
+    -->
+</beans>

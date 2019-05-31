@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         id="WebApp_ID" version="2.5">
+
+    <display-name>daisy template</display-name>
+
+    <!-- 필터 begins -->
+
+    <!--encoding = utf-8 -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>WebFilter</filter-name>
+        <filter-class>egovframework.daisyinsight.common.base.WebFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>WebFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <!-- 필터  ends-->
+
+    <!-- Spring Root Context Begins-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath*:egovframework/spring/context-*.xml</param-value>
+    </context-param>
+    <!-- Spring Root Context Ends-->
+
+    <!-- Creates the Spring Container shared by all Servlets and Filters -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+
+
+    <!--Servlet 설정 Begins-->
+    <servlet>
+        <servlet-name>action</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath*:egovframework/spring/dispatcher-servlet.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do</url-pattern>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <!--Servlet 설정 Ends-->
+
+    <!--시작 페이지 Begins-->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+        <!--<welcome-file-list>
+            <welcome-file>index.jsp</welcome-file>
+        </welcome-file-list>-->
+    <!--시작 페이지 Ends-->
+
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/error.do</location>
+    </error-page>
+    <error-page>
+        <error-code>302</error-code><location>/errors.do</location>
+    </error-page>
+
+    <error-page>
+        <error-code>301</error-code><location>/errors.do</location>
+    </error-page>
+
+    <error-page>
+        <error-code>401</error-code><location>/errors.do</location>
+    </error-page>
+    <error-page>
+        <error-code>402</error-code><location>/errors.do</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code><location>/errors.do</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code><location>/errors.do</location>
+    </error-page>
+    <error-page>
+        <error-code>405</error-code><location>/errors.do</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/errors.do</location>
+    </error-page>
+    <error-page>
+        <error-code>501</error-code>
+        <location>/errors.do</location>
+    </error-page>
+    <error-page>
+        <error-code>502</error-code>
+        <location>/errors.do</location>
+    </error-page>
+    <error-page>
+        <error-code>503</error-code>
+        <location>/errors.do</location>
+    </error-page>
+    <error-page>
+        <error-code>504</error-code>
+        <location>/errors.do</location>
+    </error-page>
+    <error-page>
+        <error-code>505</error-code>
+        <location>/errors.do</location>
+    </error-page>
+    <!-- error page 설정
+
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/WEB-INF/jsp/common/errorSystem.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/WEB-INF/jsp/common/errorNotFound.jsp?error=401</location>
+    </error-page>
+    <error-page>
+        <error-code>402</error-code>
+        <location>/WEB-INF/jsp/common/errorNotFound.jsp?error=402</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/jsp/common/errorNotFound.jsp?error=403</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/common/errorNotFound.jsp?error=404</location>
+    </error-page>
+    <error-page>
+        <error-code>405</error-code>
+        <location>/WEB-INF/jsp/common/errorNotFound.jsp?error=405</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/jsp/common/errorSystem.jsp?error=500</location>
+    </error-page>
+    <error-page>
+        <error-code>501</error-code>
+        <location>/WEB-INF/jsp/common/errorSystem.jsp?error=501</location>
+    </error-page>
+    <error-page>
+        <error-code>502</error-code>
+        <location>/WEB-INF/jsp/common/errorSystem.jsp?error=502</location>
+    </error-page>
+    <error-page>
+        <error-code>503</error-code>
+        <location>/WEB-INF/jsp/common/errorSystem.jsp?error=503</location>
+    </error-page>
+    <error-page>
+        <error-code>504</error-code>
+        <location>/WEB-INF/jsp/common/errorSystem.jsp?error=504</location>
+    </error-page>
+    <error-page>
+        <error-code>505</error-code>
+        <location>/WEB-INF/jsp/common/errorSystem.jsp?error=505</location>
+    </error-page>
+-->
+    <session-config>
+        <session-timeout>1440</session-timeout>
+    </session-config>
+</web-app>

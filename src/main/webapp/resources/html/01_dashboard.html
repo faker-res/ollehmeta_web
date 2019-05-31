@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>메타 확장</title>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
+	<link rel="stylesheet" href="../css/meta_tag_enhancer.css"/>
+	<script src="../js/lib/jquery-1.11.1.min.js"></script>
+	<script src="../js/lib/jquery-ui.min.js"></script>
+	<script src="../js/common.js"></script>
+</head>
+<body>
+
+<header class="gnb">
+	<div class="inner">
+		<h1><a href="#">Meta TAG Enhancer</a></h1>
+		<nav>
+			<ul>
+				<li class="current"><a href="#">대시보드</a></li>
+				<li><a href="#">메타태깅</a></li>
+				<li><a href="#">사전관리</a></li>
+				<li><a href="#">소셜분석</a></li>
+				<li>
+					<a href="#">관리기능</a>
+					<div class="submenu">
+						<span class="ic"></span>
+						<a href="#">통계조회</a>
+						<a href="#">권한관리</a>
+					</div>
+				</li>
+			</ul>
+		</nav>
+		<div class="user">
+			<strong>Master</strong><span>님</span>
+			<img src="../imgs/data/@user_05.jpg" alt="사진">
+		</div>
+	</div>
+</header>
+
+<div class="contents">
+	<div class="progressWrap">
+		<div class="progress">
+			<h2>편수</h2>
+			<div class="inner">
+				<dl>
+					<dt>입수완료</dt>
+					<dd>20,000</dd>
+				</dl>
+				<dl>
+					<dt>태깅완료</dt>
+					<dd>10,000</dd>
+				</dl>
+			</div>
+			<div class="stat">
+				<span class="tit">처리대기:</span>
+				<span class="number"><strong>123</strong>건</span>
+				<a href="#" class="btn_go">GO</a>
+			</div>
+		</div>
+		<div class="progress">
+			<h2>수집</h2>
+			<div class="inner">
+				<dl>
+					<dt>수집진행</dt>
+					<dd>200</dd>
+				</dl>
+				<dl>
+					<dt>수집완료</dt>
+					<dd>100</dd>
+				</dl>
+			</div>
+			<div class="stat">
+				<span class="tit">수집실패:</span>
+				<span class="number"><strong>10</strong>건</span>
+				<a href="#" class="btn_go">GO</a>
+			</div>
+			<span class="next">다음</span>
+		</div>
+		<div class="progress">
+			<h2>추출</h2>
+			<div class="inner">
+				<dl>
+					<dt>추출진행</dt>
+					<dd>200</dd>
+				</dl>
+				<dl>
+					<dt>추출완료</dt>
+					<dd>100</dd>
+				</dl>
+			</div>
+			<div class="stat">
+				<span class="tit">추출실패:</span>
+				<span class="number"><strong>10</strong>건</span>
+				<a href="#" class="btn_go disabled">GO</a>
+			</div>
+			<span class="next">다음</span>
+		</div>
+		<div class="progress">
+			<h2>승인</h2>
+			<div class="inner">
+				<dl>
+					<dt>승인진행</dt>
+					<dd>200</dd>
+				</dl>
+				<dl>
+					<dt>승인완료</dt>
+					<dd>100</dd>
+				</dl>
+			</div>
+			<div class="stat">
+				<span class="tit">승인대기:</span>
+				<span class="number"><strong>10</strong>건</span>
+				<a href="#" class="btn_go">GO</a>
+			</div>
+		</div>
+	</div><!-- //progressWrap -->
+
+	<div class="chartWrap">
+		<div class="dv2 ratio">
+			<h3>처리 비율</h3>
+			<div class="box"><img src="../imgs/data/@chart_01.jpg" alt="차트"></div>
+		</div>
+		<div class="dv2 change">
+			<h3>진행 추이</h3>
+			<div class="box"><img src="../imgs/data/@chart_02.jpg" alt="차트"></div>
+		</div>
+	</div><!-- //chartWrap -->
+</div><!-- //contents -->
+
+</body>
+</html>
