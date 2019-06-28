@@ -398,11 +398,44 @@
 
 
 
+  <profiles>
+
+    <profile>
+      <id>dev</id>
+      <properties>
+        <environment>dev</environment>
+        <maven.test.skip>true</maven.test.skip>
+      </properties>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+
+    <profile>
+      <id>prd</id>
+      <properties>
+        <environment>prd</environment>
+      </properties>
+    </profile>
+
+  </profiles>
+
 
   <build>
     <defaultGoal>install</defaultGoal>
     <directory>${basedir}/target</directory>
     <finalName>${project.artifactId}-${project.version}</finalName>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources/properties</directory>
+        <includes>
+          <include>globals-common.properties</include>
+          <include>globals-${environment}.properties</include>
+        </includes>
+      </resource>
+    </resources>
+
     <pluginManagement>
       <plugins>
         <plugin>
