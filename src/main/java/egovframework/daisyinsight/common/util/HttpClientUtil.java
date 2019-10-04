@@ -52,7 +52,10 @@ public class HttpClientUtil {
 
         String path = (String) apiInfoMap.get("url");
         String method = (String) apiInfoMap.get("method");
-
+        
+        //로컬서버(개발PC) 테스트
+        //apiUrl = "http://127.0.0.1:8080";
+        
         if ( "GET".equalsIgnoreCase(method) ) {
             // GET
             String param = formatQueryParams(apiParamMap);

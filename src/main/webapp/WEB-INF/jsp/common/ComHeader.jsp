@@ -18,9 +18,9 @@
 <script src="/js/common.js"></script>
 <script src="/js/daisy.js"></script>
 <script src="/js/plugins/jquery/jquery.number.min.js"></script>
-<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
-<script src="https://www.amcharts.com/lib/3/serial.js"></script>
-<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script src="/js/amcharts/3/amcharts.js"></script>
+<script src="/js/amcharts/3/serial.js"></script>
+<script src="/js/amcharts/3/themes/light.js"></script>
 
 <script src="/js/plugins/jquery/jquery.loadTemplate.min.js"></script>
 <style>

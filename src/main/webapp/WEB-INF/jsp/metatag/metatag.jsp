@@ -20,9 +20,28 @@
             border: 3px dotted red;
         }
         .editwrap .tag_add input[type="text"]{width: 134px;margin-right: 6px;margin-top: -1px;border-radius: 20px; border: 3px dotted red;}
+        
+        /* 자동완성 선택창 */
+		#autocomplete {
+			display: none;
+		    width: 135px;
+		    position: absolute;
+		    z-index: 9;
+		    border: 1px solid #474a50;
+		    background: #f8f8f8;
+		    border-radius: 15px;
+		    box-shadow: 0px 1px 0px 1px rgba(0,0,0,0.11);
+			font-size: 10pt;
+			padding: 10px 15px;
+			line-height: 2;
+		}
+        
     </style>
-
     <script src="/js/metatag.js"></script>
+    
+    <link rel="stylesheet" href="/js/plugins/jquery-ui/jquery-ui.css" /><!-- 권재일 수정 08.01 2-1 -->
+    <script src="/js/plugins/jquery-ui/jquery-ui.js" async></script><!-- 권재일 수정 08.01 2-1 -->
+    
 </head>
 <body>
 
@@ -150,6 +169,11 @@
                     <span class="ic"></span>
                     <span class="txt">추천상황</span>
                 </label>
+                <label for="chk_016">
+                    <input type="checkbox" id="chk_016" value="character" >
+                    <span class="ic"></span>
+                    <span class="txt">캐릭터명</span>
+                </label>
             </div>
         </div>
         <button class="btn_result">결과조회</button>
@@ -200,7 +224,7 @@
                 <col width="62px">
                 <col width="68px">
                 <col width="68px">
-                <col width="62px">
+                <col width="106px">
                 <col width="62px">
                 <col width="62px">
                 <col width="62px">
@@ -212,8 +236,9 @@
                 <th>CID&SID</th>
                 <th class="dv">분류</th>
                 <th>태깅차수</th>
+                <th>태거ID</th>
                 <th>입수일자</th>
-                <th>처리일자</th>
+                <th>처리일시</th>
                 <th class="dv">처리상태</th>
                 <th class="bg1">재수집</th>
                 <th class="bg1">재추출</th>
@@ -255,6 +280,9 @@
 
 <!-- 레이어 팝업 -->
 <div id="ly_autopop_01" class="mod_layer" style="display: none;">
+	<!-- 불용키워드에 입력할 항목 임시 저장소 -->
+	<input type="hidden" id="txtNotuse" name="txtNotuse" value=""/>
+
     <div class="layInner">
         <div id="ly_movieInfo"> </div>
 
@@ -698,6 +726,8 @@
             <!-- //.act-tabform 탭 -->
         </div><!-- //.layCont -->
         <a href="javascript:PopUpClose()" class="btn_close">닫기</a>
+		<div id="autocomplete" class="sortWrap"><!-- style="width: 150px; height: 200px;"-->
+		</div>
     </div>
 </div>
 <!-- //레이어 팝업 -->
@@ -715,7 +745,13 @@
             <span data-content="tagCnt" id="tagNumber" class="num">0</span>
             <button id="tagRollback" class="btn_repair">이전 태그 복구</button>
         </div>
-        <div class="thumbnail"><img width="180px" height="254pxen" data-src="tagPoster" src="" alt="포스터"></div>
+        <div class="thumbnail">
+			<img width="180px" height="254pxen" data-src="tagPoster" src="" alt="포스터">
+			<%--mcid로 동일 컨텐츠 검색 --%>
+			<div class="mcidBox">
+				<a href="javascript:btnMcidSearch()" class="btn_mcidSearch">MCID 조회</a><%--a href="javascript:layerAction('ly_pop_mcidSearchResult');" --%>
+			</div>			
+		</div>
         <div class="inner">
             <h5 data-content="movieTitle">라이언 일병 구하기 <span class="eng" data-content="movieOTitle">Saving Private Ryan, 1998</span></h5>
             <div class="detail_info">
@@ -740,10 +776,11 @@
         </div>
     </div><!-- //.layTop -->
 </script>
+<!-- input에 펑션이나 data-type -->
 <script id="template_meta_tag" type="text/html">
     <a id="displayTag" href="#" class="txt" data-content="tagName">
     </a>
-    <input id="updateTag" class="metaUpdateInput" type="text" placeholder="입력" style="display: none">
+    <input id="updateTag" class="metaUpdateInput" type="text" placeholder="입력" style="display: none" onfocus="fnAutoCompletePop(this)" data-id="dataId">
     <a href="#" class="btn_del">삭제</a>
     <div class="sortWrap">
     <ul>
@@ -788,6 +825,16 @@
                 감성/분위기
                 <div class="radiobtn">
                     <input type="radio" id="ra_sort_1-5" name="ra_sort_1">
+                    <span></span>
+                </div>
+            </label>
+        </li>
+        <%-- 불용어 사전 --%>
+        <li>
+            <label for="ra_sort_1-6" id="metaNotusePosition" value="notuse">
+                불용 키워드
+                <div class="radiobtn">
+                    <input type="radio" id="ra_sort_1-6" name="ra_sort_1">
                     <span></span>
                 </div>
             </label>
@@ -920,6 +967,18 @@
         };
 
     };
+    
+    //autokeywordParam
+    var autokeywordParam = function(){
+        return {
+            type : "",
+            KEYWORD : "",
+            orderby : "abc",
+            pagesize : 100000,
+            pageno : 1
+        };
+    };
+    
 
     var searchExecute = function(searchPageNo){
 
@@ -952,5 +1011,173 @@
                 function(){
                     console.log("Error")
         });
+        
+        
+        //처음 1회만 조회 - 모든 텍박이 비어 있을때만 조회함
+        if($("#txtList_when").val() || $("#txtList_where").val() || $("#txtList_what").val() || 
+        	$("#txtList_who").val() || $("#txtList_emotion").val() || $("#txtList_character").val() ){
+        	return;
+        }
+        
+        var autokeywordWhenParam = autokeywordParam();
+        var autokeywordWhereParam = autokeywordParam();
+        var autokeywordWhatParam = autokeywordParam();
+        var autokeywordWhoParam = autokeywordParam();
+        var autokeywordEmotionParam = autokeywordParam();
+        var autokeywordCharacterParam = autokeywordParam();
+        
+        autokeywordWhenParam.type = "when";
+        autokeywordWhereParam.type = "where";
+        autokeywordWhatParam.type = "what";
+        autokeywordWhoParam.type = "who";
+        autokeywordEmotionParam.type = "emotion";
+        autokeywordCharacterParam.type = "character";
+        
+        autokeywordWhenParam.pagesize = "100000";
+        autokeywordWhereParam.pagesize = "100000";
+        autokeywordWhatParam.pagesize = "100000";
+        autokeywordWhoParam.pagesize = "100000";
+        autokeywordEmotionParam.pagesize = "100000";
+        autokeywordCharacterParam.pagesize = "100000";
+
+        var apiInfo = { url: "/dic/list", method: "GET"}	//아래에도 고정
+        
+        var paramWhen = {
+            apiUrl   : JSON.stringify(apiInfo),
+            apiParam : JSON.stringify(autokeywordWhenParam||{})
+        };
+        var paramWhere = {
+            apiUrl   : JSON.stringify(apiInfo),
+            apiParam : JSON.stringify(autokeywordWhereParam||{})
+        };
+        var paramWhat = {
+            apiUrl   : JSON.stringify(apiInfo),
+            apiParam : JSON.stringify(autokeywordWhatParam||{})
+        };
+        var paramWho = {
+            apiUrl   : JSON.stringify(apiInfo),
+            apiParam : JSON.stringify(autokeywordWhoParam||{})
+        };
+        var paramEmotion = {
+            apiUrl   : JSON.stringify(apiInfo),
+            apiParam : JSON.stringify(autokeywordEmotionParam||{})
+        };
+        var paramCharacter = {
+            apiUrl   : JSON.stringify(apiInfo),
+            apiParam : JSON.stringify(autokeywordCharacterParam||{})
+        };
+        
+        var arrParam = [paramWhen,paramWhere,paramWhat,paramWho,paramEmotion,paramCharacter]
+        
+        for(var i in arrParam){
+            fnLoadDic(arrParam[i].apiParam.split("\"")[3],arrParam[i]);
+        }
+        
+        
+    }
+    
+    function fnLoadDic(strType,param){
+        $.ajax({
+            url: "/v1/apis",
+            method: "POST",
+            data: param,
+            dataType: "json",
+            success: function(data,textStatus,jqXHR){
+                if ( OM_API_CKECK(data) == true ) {
+                    console.log("when data.RESULT.LIST_WORDS.length = " + data.RESULT.LIST_WORDS.length);
+                    console.log("when data.RESULT.LIST_WORDS = " + data.RESULT.LIST_WORDS);
+                    
+                    $("#list_"+strType).empty();
+                    
+                    $.each(data.RESULT.LIST_WORDS,function(index,item){
+                    	//console.log("when data " + index + " : " + item);
+                    	//"list_"+strType
+                    	$("#list_"+strType).append($("<option>").attr("value",item).text(item));
+                    	$("#txtList_"+strType).append(item+",");
+                    });
+                    
+                    $("#txtList_"+strType).val(data.RESULT.LIST_WORDS);
+                } else {
+                    Loading(false);
+                }
+            },
+            error: function(jqXHR,textStatus,errorThrown){
+                console.log("Error");
+
+                if ( textStatus == "timeout" ) {
+                    OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
+                } else if (typeof jqXHR.responseText != "undefined" && jqXHR.responseText == "apiSessionError" ) {
+                    OM_ALERT("세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)", function() {
+                        location.href = "/";
+                    })
+                } else {
+                    OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>" +jqXHR.responseText );
+                }
+
+            },
+            complete: function() {
+                Loading(false);
+            }
+        });
+    	
     }
 </script>
+
+<!-- 미리 읽어와 팝업창의 텍스트상자에 적용 -->
+<datalist id="list_character"></datalist>
+<datalist id="list_emotion"></datalist>
+<datalist id="list_what"></datalist>
+<datalist id="list_when"></datalist>
+<datalist id="list_where"></datalist>
+<datalist id="list_who"></datalist>
+
+<input type="hidden" id="txtList_character"></input>
+<input type="hidden" id="txtList_emotion"></input>
+<input type="hidden" id="txtList_what"></input>
+<input type="hidden" id="txtList_when"></input>
+<input type="hidden" id="txtList_where"></input>
+<input type="hidden" id="txtList_who"></input>
+
+
+
+
+<!-- mcid로 동일 컨텐츠 검색 레이어 팝업 -->
+<div id="ly_pop_mcidSearchResult" class="mod_layer" style="display: none;">
+	<div class="layInner _mcid">
+		<div class="_thead">
+			<table>
+				<colgroup>
+					<col style="width:152px;" />
+					<col style="width:487px;" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th>CID&amp;SID</th>
+						<th>제목</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div class="mCustomScrollbar scroll_tbodyBox" data-mcs-theme="dark">
+			<div class="_tbody scroll_tbody">
+				<table id="tblMcidSearchResult">
+					<colgroup>
+						<!--
+						<col style="width:163px;" />
+						<col style="width:487px;" />
+						-->
+						<col style="width:152px;" />
+						<col style="width:487px;" />
+					</colgroup>
+					<tbody>
+						
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="btn_close01">
+			<a href="javascript:layerAction('','ly_pop_mcidSearchResult')" class="btn_del">삭제</a>
+		</div>
+	</div>
+</div>
+<!-- 레이어 팝업 -->

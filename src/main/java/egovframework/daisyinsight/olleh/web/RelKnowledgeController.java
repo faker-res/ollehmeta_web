@@ -9,30 +9,39 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by kth on 2017-12-13.
  */
 @Controller
-public class DictionaryController extends CommonController {
+public class RelKnowledgeController extends CommonController {
 
     final String seperator = "\t";
     final String lineFeed = System.getProperty("line.separator");
     
-    @RequestMapping(value = "/dictionary.do")
+    @RequestMapping(value = "/relknowledge.do")
     public ModelAndView biWebMain(HttpServletRequest request ) throws Exception
     {
-        logger.debug( "## dictionary " ) ;
-        ModelAndView mav = new ModelAndView("dictionary/dictionary");
+        logger.debug( "## relknowledge " ) ;
+        Map<String, String> paramMap = new HashMap<String, String>();
+        String searchType = request.getParameter("searchType");
+        if ( searchType == null ) {
+            searchType = "ALL";
+        }
+        paramMap.put("searcyType", searchType);
+
+        ModelAndView mav = new ModelAndView("relknowledge/relknowledge", paramMap);
         return mav;
     }
     
-    //CSV 업로드
-    @RequestMapping(value = "/dictionaryCsvFileUpload.do")	//@PostMapping("/api/read")
+    
+    @RequestMapping(value = "/relknowledgeCsvFileUpload.do")
     @ResponseBody
-    public ModelAndView dictionaryCsvFileUpload(
+    public ModelAndView relknowledgeCsvFileUpload(
     		HttpServletRequest request,
-    		@RequestParam("fileCsv") MultipartFile uploadfile
+    		@RequestParam("ex_filename") MultipartFile uploadfile
     		) throws Exception
     {
     	//목표 : 엑셀 파일을 JSON String으로 리턴
@@ -54,40 +63,50 @@ public class DictionaryController extends CommonController {
     	String strResult = "[";
     	String strMessage = "";
     	String strType = "";
+    	int intLine = 0;
+    	//int intColSize = 0;
+    	
     	for(String line : arrReadString){
     		String[] arrCell = line.split(seperator);
     		
-    		if(arrCell[0].equals("Type")){
+    		//헤더 건너뛰기
+    		if(intLine<1) {
+    			intLine++;
+    			continue;
+    		}else {
+    			intLine++;
+    		}
+    		
+    		//빈줄 건너뛰기
+    		if(line.replaceAll(seperator, "").replaceAll(" ", "").equals("")) {
     			continue;
     		}
-    		if(strType.equals("")) {
-    			strType = arrCell[0];
-    		}else if(!strType.equals(arrCell[0])){
-    			strMessage = "한파일 2타입";
-    			
-    			ModelAndView mav = new ModelAndView("jsonView");
-    			mav.addObject("strResult", strResult);
-    			mav.addObject("strMessage", strMessage);
-    			return mav;
+    		
+    		strResult += "{";
+    		for(int intCol=0 ; intCol<arrCell.length ; intCol++) {
+    			strResult += "col"+intCol+": \""+arrCell[intCol]+"\", ";
     		}
-			strResult +=
-				"{"+
-					"word: \""+arrCell[1]+"\", "+
-					"target_type: \""+arrCell[0]+"\", "+
-					"target_word: \""+arrCell[1]+"\", "+
-					"action: \"add\""+
-				"},";
+    		strResult = strResult.substring(0, strResult.length()-2);
+    		strResult += "},";
+    		
     	}
     	strResult = strResult.substring(0, strResult.length()-1);
     	strResult += "]";
     	
-    	System.out.println("#resultString::"+strResult);
+    	System.out.println("#resultString::"+strResult.substring(0, 1000) + " 이하생략");
+    	System.out.println("#resultString.length::"+strResult.length());
+    	System.out.println("총라인수 = " + intLine);
     	
 		ModelAndView mav = new ModelAndView("jsonView");
 		mav.addObject("strResult", strResult);
 		mav.addObject("strMessage", strMessage);
 		mav.addObject("strType", strType);
+		System.out.println("♨♨♨♨♨♨♨♨    리턴합니다");
+
+		//디버그로 하면 자바소스 디버깅은 되지만 jsp로 리턴이 안됨.
+		
 		return mav;
     }
-    
+
+    	
 }
