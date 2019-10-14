@@ -18,6 +18,9 @@ var MetaHistoryManager = {
         this.metaTagHistory = []
     },
     get : function() {
+    	console.log("[저장시 메타키워드 누락 테스트] var metaHistory = MetaHistoryManager.get()");	//[저장시 메타키워드 누락 테스트]
+    	console.log("[저장시 메타키워드 누락 테스트] - metaTagHistory = ");							//[저장시 메타키워드 누락 테스트]
+    	console.log(this.metaTagHistory);																//[저장시 메타키워드 누락 테스트]
         return this.metaTagHistory;
     },
     getDictionary : function() {
@@ -463,7 +466,7 @@ var MetaPopup = function() {
 
                 if ( MetaPopupInstance.isUpdating() ) {
                     OM_ALERT("완료되지 않은 키워드가 있습니다<br> 작업 완료 후 다시 시도 바랍니다.");
-                    return ;
+                    return false;
                 }
 
                 var currentTagCnt = $("#tagNumber").text();
@@ -821,7 +824,7 @@ var MetaPopup = function() {
 
             if ( MetaPopupInstance.isUpdating() ) {
                 OM_ALERT("완료되지 않은 키워드가 있습니다<br> 작업 완료 후 다시 시도 바랍니다.");
-                return ;
+                return false;
             }
 
             var actionName = $(this).html();
@@ -838,17 +841,24 @@ var MetaPopup = function() {
                     break;
                 case "승인":
                     // 작업중
+                	debugger;	//저장시 메타키워드 누락 테스트
                     var metaHistory = MetaHistoryManager.get();
                     if( metaHistory.length == 0 ) {
                         // 수정 사항이 없다면 승인하지 않음
                         OM_ALERT("수정 사항이 없습니다.");
 
                     } else {
-                        OM_API( APIS.METAS_UPT_ARRAY,{
+                    	//[저장시 메타키워드 누락 테스트]
+                    	console.log("[저장시 메타키워드 누락 테스트] items : JSON.stringify(metaHistory) = " + JSON.stringify(metaHistory));	//[저장시 메타키워드 누락 테스트]
+                        OM_API( APIS.METAS_UPT_ARRAY,{		//pop/meta/upt/array	[저장시 메타키워드 누락 테스트] 임시주석
                             itemid: MetaPopupInstance.itemId,
                             duration: durationValue,
                             items : JSON.stringify(metaHistory)
                         },function(response){
+                        	debugger;	//저장시 메타키워드 누락 테스트
+                        	console.log("[저장시 메타키워드 누락 테스트] response = ");	//저장시 메타키워드 누락 테스트
+                        	console.log(response);										//저장시 메타키워드 누락 테스트
+                        	
                         	//불용어사전 등록
                         	var strNotuse = $("#txtNotuse").val();
                         	if(strNotuse!=""){

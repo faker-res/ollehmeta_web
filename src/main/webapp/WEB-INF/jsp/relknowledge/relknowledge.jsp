@@ -19,13 +19,11 @@
         .metaUpdateInput {
             border: 3px dotted red;
         }
+        /*
         .editwrap .tag_add input[type="text"]{width: 134px;margin-right: 6px;margin-top: -1px;border-radius: 20px; border: 3px dotted red;}
+        */
     </style>
     <script src="/js/metatag.js"></script>
-    
-    <link rel="stylesheet" href="/js/plugins/jquery-ui/jquery-ui.css" /><!-- 권재일 수정 08.01 2-1 -->
-    <script src="/js/plugins/jquery-ui/jquery-ui.js" async></script><!-- 권재일 수정 08.01 2-1 -->
-    
     <script src="/js/relknowledge.js"></script>
 </head>
 <body>
@@ -75,7 +73,7 @@
 				<dl class="selCategory">
 					<dt>카테고리 선택</dt>
 					<dd>
-						<select>
+						<select id="cboType">
 							<option value="">선택된 카테고리가 없습니다.</option>
 							<option value="cook">요리</option>
 							<option value="curr">정치/시사</option>
@@ -90,9 +88,9 @@
 					<dt>파일선택</dt>
 					<dd>
 						<select>
-							<option>선택된 파일이 없습니다.</option>
+							<option>현재 데이터</option>
 						</select>
-						<button id="btnDown" class="btn_ok">OK12</button>
+						<button id="btnDown" class="btn_ok">OK</button>
 					</dd>
 				</dl>
 			</div>
@@ -105,16 +103,8 @@
 
 //dictionary.jsp 의 $(".btnUp").click(function(){}); → $("#fileCsv").change(function(){}); 참고
 $("#btnUp").click(function(event) {
-	
-	if("1"=="1"){
-		return;
-	}
-	
 	event.preventDefault();
 	
-	//$("#fileCsv").click();
-	alert("btnUp");
-
 	var form = $('#formRelFileCsv')[0];
 	var data = new FormData(form);
 
@@ -132,50 +122,57 @@ $("#btnUp").click(function(event) {
 		timeout: 6000000,
 		success : function(data) {
 			//리턴된 json 문자열을 서버로 보냄 → 일괄등록(일단 파싱먼저)
-			debugger;
-			alert("strResult = " + data.strResult);
+			//debugger;
+			//alert("strResult = " + data.strResult);
 
 			var strResult = data.strResult;
 			var strMessage = data.strMessage;
 			var strType = data.strType;
+			
+//			alert(
+//				"strResult = " + strResult + "\n" + 
+//				"strMessage = " + strMessage + "\n" + 
+//				"strType = " + strType
+//			);
 
 			if (strMessage != "") {
 				alert(strMessage);
 				return false;
 			}
 			
-			
-			
-			debugger;
-			
-			
 			//2019.10.02~
 			//삭제 + 추가
 			//Loading(true);
 			var param = {
 				apiUrl : JSON.stringify({
-					url : "/relknowledge/upload/type",	//from /dic/del/type
+//					url : "/relknowledge/upload/type",	//from /dic/del/type
+					url : "/relknowledge/delete/type",	//from /dic/del/type
 					method : "POST"
 				}),
 				apiParam : JSON.stringify({
-					type : strType,
-					items : strResult
+					type : strType
+					//,
+					//items : arrStrResult[idx]
 				})
 			};
 
 			$.ajax({
 				url : "/v1/apis",
-				//timeout: 20000,
+				timeout: 20000,
 				method : "POST",
 				data : param,
 				dataType : "json",
+				async: false,
 				success : function(data, textStatus, jqXHR) {
-					alert("ok " + data.rtmsg);
+					//alert("delete ok " + data.rtmsg);
 
 					//모래시계 없애기
-					Loading(false);
+					//Loading(false);
 
 					//새로고침 로직
+					
+					//아래로 순차 진행
+					
 				},
 				error : function(jqXHR,
 						textStatus,
@@ -198,131 +195,97 @@ $("#btnUp").click(function(event) {
 								+ jqXHR.responseText
 								+ "<br>----------------");
 					}
+					
+					Loading(false);
+					return false;
 
 				},
 				complete : function() {
-					Loading(false);
+					//Loading(false);
 				}
 
 			});
 			
+			var intErrCount = 0;
 			
-			
-			
-			
-			
+			var arrStrResult = strResult.split(":/:/:/:");
+			for(var idx in arrStrResult){
+				//alert("tmpStrResult["+idx+"] = \n"+ arrStrResult[idx]);
+				
+				var param = {
+						apiUrl : JSON.stringify({
+							url : "/relknowledge/upload/type",	//from /dic/del/type
+//							url : "/relknowledge/delete/type",	//from /dic/del/type
+							method : "POST"
+						}),
+						apiParam : JSON.stringify({
+							type : strType,
+							items : arrStrResult[idx]
+						})
+					};
+				
+				if(intErrCount>0){
+					continue;
+				//}else if(intErrCount<1){
+				//	alert(arrStrResult[idx]);
+				//	continue;
+				}
+				
+				$.ajax({
+					url : "/v1/apis",
+					//timeout: 20000,
+					method : "POST",
+					data : param,
+					dataType : "json",
+					async: false,
+					success : function(data, textStatus, jqXHR) {
+						//alert("ok " + data.rtmsg);
 
-			//테스트는 여기까지
-			if ("1" == "1") {
-				alert("테스트는 여기까지 (_ _)..");
+						//모래시계 없애기
+						//Loading(false);
+
+						//새로고침 로직
+						
+						//순차진행
+						
+					},
+					error : function(jqXHR,textStatus,errorThrown) {
+						//failCallback(jqXHR,textStatus,errorThrown);
+
+						if (textStatus == "timeout") {
+							OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
+						} else if (typeof jqXHR.responseText != "undefined"
+								&& jqXHR.responseText == "apiSessionError") {
+							OM_ALERT(
+									"세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)",
+									function() {
+										location.href = "/";
+									})
+						} else {
+							OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"
+									+ textStatus
+									+ "<br><br>----------------<br>"
+									+ jqXHR.responseText
+									+ "<br>----------------");
+						}
+						
+						intErrCount++;
+
+					},
+					complete : function() {
+						
+					}
+
+				});
+				
+				
+			}
+			
+			if(intErrCount<1){
+				alert("ok");
 				Loading(false);
-				return false;
-			}
-
-			//삭제 + 추가
-			//Loading(true);
-			var param = {
-				apiUrl : JSON.stringify({
-					url : "/relknowledge/upload/type",
-					method : "POST"
-				}),
-				apiParam : JSON.stringify({
-					type : strType,
-					items : strResult
-				})
-			};
-
-			$.ajax({
-				url : "/v1/apis",
-				//timeout: 20000,
-				method : "POST",
-				data : param,
-				dataType : "json",
-				success : function(data, textStatus, jqXHR) {
-					alert("ok " + data.rtmsg);
-
-					//모래시계 없애기
-					Loading(false);
-
-					//새로고침 로직
-				},
-				error : function(jqXHR,
-						textStatus,
-						errorThrown) {
-					//failCallback(jqXHR,textStatus,errorThrown);
-
-					if (textStatus == "timeout") {
-						OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
-					} else if (typeof jqXHR.responseText != "undefined"
-							&& jqXHR.responseText == "apiSessionError") {
-						OM_ALERT(
-								"세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)",
-								function() {
-									location.href = "/";
-								})
-					} else {
-						OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"
-								+ textStatus
-								+ "<br><br>----------------<br>"
-								+ jqXHR.responseText
-								+ "<br>----------------");
-					}
-
-				},
-				complete : function() {
-					Loading(false);
-				}
-
-			});
-
-			/*
-			//아래는 이전로직이므로 여기서 차단
-			if("1"=="1"){
-				return false;
 			}
 			
-			
-			//삭제 후 추가
-			//Loading(true);
-			var param = {
-			    apiUrl   : JSON.stringify({url : "/dic/del/type",method : "POST"}),
-			    apiParam : JSON.stringify({type : strType, items : strResult})
-			};
-
-			$.ajax({
-			    url: "/v1/apis",
-			    //timeout: 20000,
-			    method: "POST",
-			    data: param,
-			    dataType: "json",	//혹시 file 인가
-			    success: function(data,textStatus,jqXHR){
-			        alert("ok " + data.rtmsg);
-			        
-			        //모래시계 없애기
-			        Loading(false);
-			        
-			        //새로고침 로직
-			    },
-			    error: function(jqXHR,textStatus,errorThrown){
-			        //failCallback(jqXHR,textStatus,errorThrown);
-
-			        if ( textStatus == "timeout" ) {
-			            OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
-			        } else if (typeof jqXHR.responseText != "undefined" && jqXHR.responseText == "apiSessionError" ) {
-			            OM_ALERT("세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)", function() {
-			                location.href = "/";
-			            })
-			        } else {
-			            OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"+textStatus+"<br><br>----------------<br>" +jqXHR.responseText +"<br>----------------");
-			        }
-
-			    },
-			    complete: function() {
-			        Loading(false);
-			    }
-
-			});
-			 */
 
 		},
 		error : function(e) {
@@ -339,7 +302,49 @@ $("#btnUp").click(function(event) {
 });
 
 	$("#btnDown").click(function() {
-		$("#fileCsv").click();
-		alert("btnDown");
+		//$("#fileCsv").click();
+		var type = $("#cboType option:selected").val();
+//		alert("btnDown - type="+type);
+		
+		debugger;
+		Loading(true);
+		
+		var param = {	
+			apiUrl   : JSON.stringify({url : "/relknowledge/download/type",method : "GET"}),
+			apiParam : JSON.stringify({type : type}||{})
+		};
+
+		$.ajax({
+			url: "/v1/apis",
+			timeout: 20000,
+			method: "POST",
+			data: param,
+			dataType: "json",
+			success: function(data,textStatus,jqXHR){
+				alert("result success");
+				if ( OM_API_CKECK(data) == true ) {
+					successCallback(data,textStatus,jqXHR);
+				} else {
+					Loading(false);
+				}
+			},
+			error: function(jqXHR,textStatus,errorThrown){
+				debugger;
+				alert("result error");
+				if ( textStatus == "timeout" ) {
+					OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
+				} else if (typeof jqXHR.responseText != "undefined" && jqXHR.responseText == "apiSessionError" ) {
+					OM_ALERT("세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)", function() {
+						location.href = "/";
+					})
+				} else {
+					//OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"+textStatus+"<br><br>----------------<br>" +jqXHR.responseText +"<br>----------------");
+					window.open(jqXHR.responseText);
+				}
+			},	
+			complete: function() {	
+				Loading(false);
+			}	
+		});
 	});
 </script>

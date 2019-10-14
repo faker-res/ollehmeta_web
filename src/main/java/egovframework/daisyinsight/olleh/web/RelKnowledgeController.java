@@ -41,7 +41,8 @@ public class RelKnowledgeController extends CommonController {
     @ResponseBody
     public ModelAndView relknowledgeCsvFileUpload(
     		HttpServletRequest request,
-    		@RequestParam("ex_filename") MultipartFile uploadfile
+    		@RequestParam("ex_filename") MultipartFile uploadfile,
+    		@RequestParam("type") String strType
     		) throws Exception
     {
     	//목표 : 엑셀 파일을 JSON String으로 리턴
@@ -56,14 +57,17 @@ public class RelKnowledgeController extends CommonController {
     	System.out.println("#byteSize::"+byteSize);
     	
     	readString = new String(readByte,"UTF-8");	//인코딩 맞춰야
+    	//readString = new String(readByte,"euc-kr");	//인코딩 맞춰야
     	System.out.println("#readString::"+readString);
     	
     	//to Json String {word: "키워드", target_type: "WHEN", target_word: "키워드", action: "add"}
     	String[] arrReadString = readString.split(lineFeed);
     	String strResult = "[";
     	String strMessage = "";
-    	String strType = "";
+    	String strTmpCol = "";
+    	//String strType = "";
     	int intLine = 0;
+    	int intDatas = 0;
     	//int intColSize = 0;
     	
     	for(String line : arrReadString){
@@ -76,18 +80,53 @@ public class RelKnowledgeController extends CommonController {
     		}else {
     			intLine++;
     		}
+    		//System.out.println("♨♨♨♨    Processing : " + intLine + " / " + arrReadString.length);
     		
     		//빈줄 건너뛰기
     		if(line.replaceAll(seperator, "").replaceAll(" ", "").equals("")) {
     			continue;
     		}
+			//System.out.println("line - " + line);
+    		
+    		
+    		//배열 끊을 수 있는 문자 삽입
+    		//strResult
+    		//intDatas++;//맨아래로
+    		if(intDatas%500==0 && intDatas>0) {
+    			strResult = strResult.substring(0, strResult.length()-1);
+    			strResult += "]:/:/:/:[";
+    		}
     		
     		strResult += "{";
     		for(int intCol=0 ; intCol<arrCell.length ; intCol++) {
-    			strResult += "col"+intCol+": \""+arrCell[intCol]+"\", ";
+    			//strResult += "col"+intCol+": \""+arrCell[intCol]+"\", ";
+    			//System.out.println(" " + intCol + ":[" + arrCell[intCol] + "]");
+    			strTmpCol = arrCell[intCol];
+    			
+    			//특수기호
+    			//strTmpCol.replaceAll("\n", "");
+    			//strTmpCol.replaceAll("\r", "");
+    			//strTmpCol.replaceAll("\\", "");
+    			
+    			
+    			if(strTmpCol.equals("")) {
+    				strResult += "col"+intCol+": \"\", ";
+    			}else {
+        			//10.07 : "dd,dd" 인 경우 앞 뒤 따옴표 빼고
+        			//System.out.println(arrCell[intCol].substring(0, 1));
+        			//System.out.println(arrCell[intCol].substring(arrCell[intCol].length()-1, arrCell[intCol].length()));
+        			//System.out.println("result - " + "col"+intCol+": "+arrCell[intCol]+",   or   col"+intCol+": \""+arrCell[intCol]+"\", ");
+        			if(strTmpCol.substring(0, 1).equals("\"") && strTmpCol.substring(strTmpCol.length()-1, strTmpCol.length()).equals("\"")) {
+        				strResult += "col"+intCol+": "+strTmpCol+", ";
+        			}else {
+        				strResult += "col"+intCol+": \""+strTmpCol+"\", ";
+        			}
+    			}
     		}
     		strResult = strResult.substring(0, strResult.length()-2);
     		strResult += "},";
+    		
+    		intDatas++;	//위에서 여기로
     		
     	}
     	strResult = strResult.substring(0, strResult.length()-1);
@@ -96,6 +135,7 @@ public class RelKnowledgeController extends CommonController {
     	System.out.println("#resultString::"+strResult.substring(0, 1000) + " 이하생략");
     	System.out.println("#resultString.length::"+strResult.length());
     	System.out.println("총라인수 = " + intLine);
+    	System.out.println("처리 데이터수 = " + intDatas);
     	
 		ModelAndView mav = new ModelAndView("jsonView");
 		mav.addObject("strResult", strResult);
