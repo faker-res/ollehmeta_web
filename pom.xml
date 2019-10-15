@@ -19,13 +19,13 @@
   <!--전자 정부 프레임워크 repo 설정 begins-->
   <repositories>
 
-    <!-- KT 에서 제공하는 ldap 라이브러리
+    <!-- KT 에서 제공하는 ldap 라이브러리-->
     <repository>
       <id>kt-ldap</id>
       <name>kt-ldap</name>
-      <url>file:///${project.basedir}/main/webapp/WEB-INF/lib</url>
+      <url>file://${project.basedir}/main/webapp/WEB-INF/lib</url>
     </repository>
--->
+
     <repository>
       <id>mvn2</id>
       <url>http://repo1.maven.org/maven2/</url>
@@ -40,6 +40,7 @@
     <repository>
       <id>egovframe</id>
       <url>http://www.egovframe.go.kr/maven/</url>
+      <!-- <url>http://maven.egovframe.kr:8080/maven/</url> -->
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -429,10 +430,20 @@
 
     <resources>
       <resource>
-        <directory>src/main/resources/properties</directory>
+        <directory>src/main/resources</directory>
         <includes>
-          <include>globals-common.properties</include>
-          <include>globals-${environment}.properties</include>
+          <include>properties/globals-common.properties</include>
+          <include>properties/globals-${environment}.properties</include>
+        </includes>
+      </resource>
+      
+       <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>*.xml</include>
+          <include>**/*.xml</include>
+          <include>**/**/*.xml</include>
+          <include>**/**/**/*.xml</include>
         </includes>
       </resource>
       <resource>

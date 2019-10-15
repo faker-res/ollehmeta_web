@@ -49,10 +49,12 @@ public class HttpClientUtil {
 
 
     public String requestOllehMeta(HashMap<String,Object> apiInfoMap, HashMap<String,Object> apiParamMap) throws Exception {
+
     	System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta");
     	
         String path = (String) apiInfoMap.get("url");
         String method = (String) apiInfoMap.get("method");
+
         System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta - path - " + path);
         System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta - method - " + method);
         
@@ -61,7 +63,7 @@ public class HttpClientUtil {
         
         if ( "GET".equalsIgnoreCase(method) ) {
             // GET
-            String param = formatQueryParams(apiParamMap); 
+            String param = formatQueryParams(apiParamMap);
             System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta - (method=get) cmts에 보내기 전");
             System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta - param - " + param);
             return sendGet(path, param);
@@ -217,6 +219,7 @@ public class HttpClientUtil {
             post.setEntity(new UrlEncodedFormEntity(paramList, encoding));
 
             ResponseHandler<String> rh = new BasicResponseHandler();
+
             System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.postTest - rh = " + rh.toString());
             
             System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.postTest - client.execute(post, rh) 실행 전");

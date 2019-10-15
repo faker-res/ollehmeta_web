@@ -8,7 +8,7 @@
 
 
     <Loggers>
-        <Logger name="java.sql" level="INFO" additivity="false">
+        <Logger name="java.sql" level="DEBUG" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
         <Logger name="egovframework" level="DEBUG" additivity="false">
@@ -25,27 +25,27 @@
 
 
         <!-- Query Loggers -->
-	    <Logger name="jdbc.sqlonly" additivity="false" level="FATAL" >
+	    <Logger name="jdbc.sqlonly" additivity="false" level="DEBUG" >
 	        <AppenderRef ref="console"/>
 	    </Logger>
-	    <Logger name="jdbc.audit" additivity="false" level="FATAL">
+	    <Logger name="jdbc.audit" additivity="false" level="DEBUG">
 	        <AppenderRef ref="console"/>
 	    </Logger>
-	    <Logger name="jdbc.resultset" additivity="false" level="FATAL">
+	    <Logger name="jdbc.resultset" additivity="false" level="DEBUG">
 	        <AppenderRef ref="console"/>
 	    </Logger>
-	    <Logger name="jdbc.connection" additivity="false" level="FATAL">
+	    <Logger name="jdbc.connection" additivity="false" level="DEBUG">
 	        <AppenderRef ref="console"/>
 	    </Logger>
-	    <Logger name="log4jdbc.debug" additivity="false" level="FATAL">
+	    <Logger name="log4jdbc.debug" additivity="false" level="DEBUG">
 	        <AppenderRef ref="console"/>
 	    </Logger>
 
-        <Logger name="org.springframework" level="info" additivity="false">
+        <Logger name="org.springframework" level="DEBUG" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
 
-        <Root level="INFO">
+        <Root level="DEBUG">
             <AppenderRef ref="console" />
         </Root>
     </Loggers>
