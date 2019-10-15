@@ -434,6 +434,12 @@
           <include>globals-${environment}.properties</include>
         </includes>
       </resource>
+      <resource>
+        <directory>src/main/resources/egovframework/db/example</directory>
+        <includes>
+          <include>sampledb.sql</include>
+        </includes>
+      </resource>
     </resources>
 
     <pluginManagement>
