@@ -30,13 +30,18 @@ public class OllehMetaController  extends CommonController {
     @RequestMapping(value = "/v1/apis", produces = "application/json; charset=utf8")
     public String apis(HttpServletRequest request ) throws Exception
     {
+    	System.out.println("[저장시 메타키워드 누락 테스트] - OllehMetaController.apis /v1/apis");
         String apiInfo   = request.getParameter("apiUrl");
         String apiParam  = request.getParameter("apiParam");
+    	System.out.println("[저장시 메타키워드 누락 테스트] - apiInfo - " + apiInfo);
+    	System.out.println("[저장시 메타키워드 누락 테스트] - apiParam - " + apiParam);
 
         HashMap<String,Object> apiInfoMap = new ObjectMapper().readValue(apiInfo, HashMap.class);
         HashMap<String,Object> apiParamMap = new ObjectMapper().readValue(apiParam, HashMap.class);
 
+    	System.out.println("[저장시 메타키워드 누락 테스트] - OllehMetaController.apis httpClientUtil.requestOllehMeta(apiInfo → apiInfoMap, apiParam → apiParamMap) 동작");
         String response = httpClientUtil.requestOllehMeta(apiInfoMap, apiParamMap);
+    	System.out.println("[저장시 메타키워드 누락 테스트] - OllehMetaController.apis response - " + response);
         return response;
     }
 
