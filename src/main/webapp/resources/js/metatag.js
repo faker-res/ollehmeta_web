@@ -821,7 +821,7 @@ var MetaPopup = function() {
         // 닫기  승인 재수집 추출 처리
         $(".btnBig button").off();
         $(".btnBig button").click(function(e){
-
+        	debugger;	//저장시 메타키워드 누락 테스트
             if ( MetaPopupInstance.isUpdating() ) {
                 OM_ALERT("완료되지 않은 키워드가 있습니다<br> 작업 완료 후 다시 시도 바랍니다.");
                 return false;
@@ -842,6 +842,7 @@ var MetaPopup = function() {
                 case "승인":
                     // 작업중
                 	debugger;	//저장시 메타키워드 누락 테스트
+                	console.log("[저장시 메타키워드 누락 테스트] 승인버튼 클릭");	//[저장시 메타키워드 누락 테스트]
                     var metaHistory = MetaHistoryManager.get();
                     if( metaHistory.length == 0 ) {
                         // 수정 사항이 없다면 승인하지 않음
@@ -892,6 +893,7 @@ var MetaPopup = function() {
                             //alert("API 수정 요청")
                             metaLayerAction();
                             OM_ALERT("승인 완료 했습니다.");
+                            debugger;	//저장시 메타키워드 누락 테스트
                             MetaHistoryManager.reset();
 
                             var pageNo = $(".pagenation .current").attr("value");
