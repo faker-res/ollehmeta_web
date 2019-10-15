@@ -71,6 +71,20 @@
                         <button id="tagDBSearch">검색</button>
                     </div>
                 </div><!-- //.topWrap -->
+                <!-- 정렬콤보상자 + CSV 업로드/다운로드 -->
+				<div class="btnWrap _csv">
+					<select name="cboOrder" id="cboOrder">
+						<option value="new">최신순</option>
+						<option value="abc">가나다순</option>
+					</select>
+					<span class="_bar"></span>
+					<form id="formFileCsv" action="/dictionaryCsvFileUpload.do" enctype="multipart/form-data" method="post">
+					<input type="file" id="fileCsv" name="fileCsv" style="width:0px;"/>
+					</form>
+					<button type="button" class="btnUp">CSV 업로드</button>
+					<button type="button" class="btnDown">CSV 다운로드</button>
+				</div>
+				
                 <div class="editwrap"  id="allMetaTag">
 
                 </div><!-- //.editwrap -->
@@ -364,7 +378,166 @@
                     loadDictionary(1, "");
                 }
             });
+            
+            //정렬
+            $("#cboOrder").change(function(){
+                var keyword = $("#tagSearch").val();
+                if ( keyword != "" ) {
+                    loadDictionary(1, keyword);
+                } else {
+                    loadDictionary(1, "");
+                }
+            });
+            
+            //CSV 다운로드
+            $(".btnDown").click(function(){
+            	var type = $("#dicType .current").attr("value").toLowerCase();
+            	alert("btnDown - type:["+type+"]");
+            	
+                Loading(true);
+                
+                var param = {
+                    apiUrl   : JSON.stringify({url : "/admin/dic/keywords/download",method : "GET"}),
+                    apiParam : JSON.stringify({type : type}||{})
+                };
 
+			    //모래시계 추가
+			    Loading(true);
+			    
+                $.ajax({
+                    url: "/v1/apis",
+                    timeout: 20000,
+                    method: "POST",
+                    data: param,
+                    dataType: "json",
+                    success: function(data,textStatus,jqXHR){
+
+                        if ( OM_API_CKECK(data) == true ) {
+                            successCallback(data,textStatus,jqXHR);
+                        } else {
+                            Loading(false);
+                        }
+                    },
+                    error: function(jqXHR,textStatus,errorThrown){
+                        //failCallback(jqXHR,textStatus,errorThrown);
+
+                        if ( textStatus == "timeout" ) {
+                            OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
+                        } else if (typeof jqXHR.responseText != "undefined" && jqXHR.responseText == "apiSessionError" ) {
+                            OM_ALERT("세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)", function() {
+                                location.href = "/";
+                            })
+                        } else {
+                            //OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"+textStatus+"<br><br>----------------<br>" +jqXHR.responseText +"<br>----------------");
+                        	window.open(jqXHR.responseText);
+                        }
+
+                    },
+                    complete: function() {
+                        Loading(false);
+                    }
+
+                });
+            });
+			
+            //CSV 업로드
+            $(".btnUp").click(function(){
+            	//1. 파일을 로컬에 업로드(web)
+            	//2. 업로드 파일을 json 스트링으로 리턴(web)
+            	//3. json스트링을 ctms 서버로 서브밋(web → ctms)
+            	//4. 분해하여 (기존거 삭제 후) 업로드~
+            	
+            	//formFileCsv.fileCsv 창 띄우기
+            	$("#fileCsv").click();//?
+            });
+            
+            
+            //CSV 업로드
+            $("#fileCsv").change(function(){
+			    var form = $('#formFileCsv')[0];
+			    var data = new FormData(form);
+			
+			    //모래시계 추가
+			    Loading(true);
+			    
+			    $.ajax({
+			        type: "POST",
+			        enctype: 'multipart/form-data',
+			        url: "/dictionaryCsvFileUpload.do",
+			        data: data,
+			        processData: false, //prevent jQuery from automatically transforming the data into a query string
+			        contentType: false,
+			        cache: false,
+			        //timeout: 600000,
+			        success: function (data) {
+			        	//리턴된 json 문자열을 서버로 보냄 → 일괄등록(일단 파싱먼저)
+			        	debugger;
+			        	//alert("strResult = " + data.strResult);
+			        	
+			        	var strResult = data.strResult;
+			        	var strMessage = data.strMessage;
+			        	var strType = data.strType;
+			        	
+			        	if(strMessage != ""){
+			        		alert(strMessage);
+			        		return false;
+			        	}
+			        	
+			        	
+			        	//삭제 후 추가
+		                //Loading(true);
+		                var param = {
+		                    apiUrl   : JSON.stringify({url : "/dic/del/type",method : "POST"}),
+		                    apiParam : JSON.stringify({type : strType, items : strResult})
+		                };
+
+		                $.ajax({
+		                    url: "/v1/apis",
+		                    //timeout: 20000,
+		                    method: "POST",
+		                    data: param,
+		                    dataType: "json",	//혹시 file 인가
+		                    success: function(data,textStatus,jqXHR){
+		                        alert("ok " + data.rtmsg);
+		                        
+		                        //모래시계 없애기
+		                        Loading(false);
+		                        
+		                        //새로고침 로직
+		                    },
+		                    error: function(jqXHR,textStatus,errorThrown){
+		                        //failCallback(jqXHR,textStatus,errorThrown);
+
+		                        if ( textStatus == "timeout" ) {
+		                            OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
+		                        } else if (typeof jqXHR.responseText != "undefined" && jqXHR.responseText == "apiSessionError" ) {
+		                            OM_ALERT("세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)", function() {
+		                                location.href = "/";
+		                            })
+		                        } else {
+		                            OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"+textStatus+"<br><br>----------------<br>" +jqXHR.responseText +"<br>----------------");
+		                        }
+
+		                    },
+		                    complete: function() {
+		                        Loading(false);
+		                    }
+
+		                });
+			        	
+			        	
+			        },
+			        error: function (e) {
+
+			            //$("#result").text(e.responseText);
+			            console.log("ERROR : ", e);
+			            //$("#btnSubmit").prop("disabled", false);
+
+			        }
+			    });
+            	
+            });
+            
 
         });
 
@@ -384,10 +557,13 @@
 
             var type = $("#dicType .current").attr("value").toLowerCase();
             var tagPosition = $("#dicType .current").attr("value").toLowerCase();
+            var orderby = $("#cboOrder option:selected").val();	//권재일 추가 07.31 5-1
+            //alert("orderby = " + orderby);
             OM_API(
                     APIS.DIC_LIST, {
                         type: type,
                         KEYWORD: searchKeyword,
+                        orderby:orderby,
                         pagesize: 500,
                         pageno:pageNo
                     }, function(data){

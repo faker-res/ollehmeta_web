@@ -60,6 +60,7 @@
                     </div>
                 </li>
                 <% } %>
+                <li class="<%=( reqURI.indexOf("//relknowledge.do") >-1 ) ? "current" : "" %>"><a href="/relknowledge.do">연관지식</a></li>
             </ul>
         </nav>
         <div class="user">
