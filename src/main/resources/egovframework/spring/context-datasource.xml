@@ -29,11 +29,11 @@
 		<property name="minIdle" value="10" />
 	</bean>-->
 
-	<!--내장 HSQLB  -->
+	<!--내장 HSQLB
 	<jdbc:embedded-database id="dataSource" type="HSQL">
 		<jdbc:script location="classpath:/egovframework/db/example/sampledb.sql"/>
 	</jdbc:embedded-database>
-	 
+	  -->
 
     
     <!-- oracle
