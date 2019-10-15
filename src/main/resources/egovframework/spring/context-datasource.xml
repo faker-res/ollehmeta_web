@@ -31,7 +31,7 @@
 
 	<!--내장 HSQLB -->
 	<jdbc:embedded-database id="dataSource" type="HSQL">
-		<jdbc:script location="classpath:/egovframework/db/example/sampledb.sql.txt"/>
+		<jdbc:script location="classpath:/egovframework/db/example/sampledb.sql"/>
 	</jdbc:embedded-database>
 
 
