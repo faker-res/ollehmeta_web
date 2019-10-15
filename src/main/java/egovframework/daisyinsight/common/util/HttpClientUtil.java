@@ -49,24 +49,37 @@ public class HttpClientUtil {
 
 
     public String requestOllehMeta(HashMap<String,Object> apiInfoMap, HashMap<String,Object> apiParamMap) throws Exception {
-
+    	System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta");
+    	
         String path = (String) apiInfoMap.get("url");
         String method = (String) apiInfoMap.get("method");
-
+        System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta - path - " + path);
+        System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta - method - " + method);
+        
+        //로컬서버(개발PC) 테스트
+        //apiUrl = "http://127.0.0.1:8080";
+        
         if ( "GET".equalsIgnoreCase(method) ) {
             // GET
-            String param = formatQueryParams(apiParamMap);
+            String param = formatQueryParams(apiParamMap); 
+            System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta - (method=get) cmts에 보내기 전");
+            System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta - param - " + param);
             return sendGet(path, param);
         } else {
+            System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta - path - " + path);
+            System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta - method - " + method);
             // POST
             //return sendPost(path, apiParamMap);
             //return ollehHttpClientUtil.reqPost(apiUrl + path, apiParamMap);
             //return Post(path, apiParamMap);
+            System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta - (method=post) cmts에 보내기 전");
+            System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.requestOllehMeta - apiParamMaptoString() - " + apiParamMap.toString());
             return postTest(apiUrl + path, apiParamMap);
         }
     }
 
     public String sendGet(String path, String param) throws Exception {
+        System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.sendGet");
 
         String url = apiUrl + path+ param;
 
@@ -92,6 +105,7 @@ public class HttpClientUtil {
             result.append(line);
         }
         System.out.println("Response Msg : " + result.toString());
+        System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.sendGet return");
         return result.toString();
 
     }
@@ -191,6 +205,7 @@ public class HttpClientUtil {
      * @return 서버 응답결과 문자열
      */
     public String postTest(String url, HashMap<String,Object> params, String encoding){
+        System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.postTest");
         HttpClient client = new DefaultHttpClient();
 
         try{
@@ -198,13 +213,18 @@ public class HttpClientUtil {
             System.out.println("\nSending 'POST' request to URL : " + post.getURI());
 
             List<NameValuePair> paramList = convertParam(params);
+            System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.postTest - paramList = " + paramList.toString());
             post.setEntity(new UrlEncodedFormEntity(paramList, encoding));
 
             ResponseHandler<String> rh = new BasicResponseHandler();
-
+            System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.postTest - rh = " + rh.toString());
+            
+            System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.postTest - client.execute(post, rh) 실행 전");
             String result =  client.execute(post, rh);
+            System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.postTest - client.execute(post, rh) 실행 후");
             System.out.println("Response Msg : " + result);
 
+            System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.postTest - HttpClientUtil.postTest return 직전");
             return result;
         }catch(Exception e){
             e.printStackTrace();
@@ -212,10 +232,12 @@ public class HttpClientUtil {
         }finally{
             client.getConnectionManager().shutdown();
         }
+        System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.postTest return - error");
         return "error";
     }
 
     public String postTest(String url, HashMap<String,Object> params){
+        System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.postTest");
         return postTest(url, params, "UTF-8");
     }
 
