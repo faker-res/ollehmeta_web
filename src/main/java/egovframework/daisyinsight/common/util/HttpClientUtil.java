@@ -217,6 +217,7 @@ public class HttpClientUtil {
             post.setEntity(new UrlEncodedFormEntity(paramList, encoding));
 
             ResponseHandler<String> rh = new BasicResponseHandler();
+
             System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.postTest - rh = " + rh.toString());
             
             System.out.println("[저장시 메타키워드 누락 테스트] - HttpClientUtil.postTest - client.execute(post, rh) 실행 전");
