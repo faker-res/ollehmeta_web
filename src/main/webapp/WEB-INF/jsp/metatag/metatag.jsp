@@ -1084,9 +1084,6 @@
             dataType: "json",
             success: function(data,textStatus,jqXHR){
                 if ( OM_API_CKECK(data) == true ) {
-                    console.log("when data.RESULT.LIST_WORDS.length = " + data.RESULT.LIST_WORDS.length);
-                    console.log("when data.RESULT.LIST_WORDS = " + data.RESULT.LIST_WORDS);
-                    
                     $("#list_"+strType).empty();
                     
                     $.each(data.RESULT.LIST_WORDS,function(index,item){

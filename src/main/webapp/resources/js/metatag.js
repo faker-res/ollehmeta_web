@@ -18,9 +18,6 @@ var MetaHistoryManager = {
         this.metaTagHistory = []
     },
     get : function() {
-    	console.log("[저장시 메타키워드 누락 테스트] var metaHistory = MetaHistoryManager.get()");	//[저장시 메타키워드 누락 테스트]
-    	console.log("[저장시 메타키워드 누락 테스트] - metaTagHistory = ");							//[저장시 메타키워드 누락 테스트]
-    	console.log(this.metaTagHistory);																//[저장시 메타키워드 누락 테스트]
         return this.metaTagHistory;
     },
     getDictionary : function() {
@@ -192,6 +189,7 @@ var MetaTag = function() {
             $("#"+thisObject.tagId + " #updateTag").val(thisObject.tagName);
             
             $("#"+thisObject.tagId).find("#updateTag").attr("data-id",thisObject.tagId);
+            $("#"+thisObject.tagId).find("#updateTag").attr("data-original",thisObject.tagName);
 
             thisObject.editMode = true; // 수정 모드
 
@@ -201,6 +199,17 @@ var MetaTag = function() {
                     OM_ALERT("입력 글자 수를 50자 이상 넣을 수 없습니다.");
                     return;
                 }
+                
+                //중복입력 차단
+            	//value와 data-original이 다를 때만
+            	if (updateKeyword.length > 0 ) {	//빈칸은 무시
+                	if(updateKeyword!=$("#"+thisObject.tagId).find("#updateTag").attr("data-original")){
+		                if(fnDuplCnt(updateKeyword,thisObject.tagPosition)){
+		                	OM_ALERT("이미 등록되어 있는 키워드입니다.");
+		                	return;
+		                }
+                	}
+            	}
 
                 thisObject.editMode = false;
 
@@ -323,6 +332,9 @@ var MetaTag = function() {
                     }).add()
                     thisObject.onDataChangeEvent();
                 }
+                
+                //삭제된건 빈칸으로
+                $("#"+thisObject.tagId+" > a#displayTag").text("");
             });
         }
 
@@ -347,6 +359,13 @@ var MetaTag = function() {
 
         var gotoPosition = $(dom).attr("id").replace("Position", "")
         if ( gotoPosition != thisObject.parentDom ) {
+            var targetPosition = gotoPosition.replace("meta", "").toLowerCase();
+            //중복입력 차단
+            if(fnDuplCnt(thisObject.tagName,targetPosition)){
+            	OM_ALERT("이미 등록되어 있는 키워드입니다.");
+            	return;
+            }
+            
             // 현재 ELM 삭제 후 추가
             $("#"+thisObject.tagId).hide();
 
@@ -355,7 +374,6 @@ var MetaTag = function() {
                 thisObject.tagName,
                 "del");
 
-            var targetPosition = gotoPosition.replace("meta", "").toLowerCase();
             MetaHistoryManager.add(thisObject.tagName ,
                 targetPosition,
                 thisObject.tagName,
@@ -656,17 +674,17 @@ var MetaPopup = function() {
         //태그정보 로딩 - 팝업창에서 로드할 때는 없는 정보
         addMetaKeyword(this.data.RESULT.LIST_SUBGENRE, "listSubGenre", function(v, parentTag){
             return {
-                parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: v.type, tagPosition: "listSubGenre", enableMenu: false };
+                parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: v.type, tagPosition: "listsubgenre", enableMenu: false };
         });
 
         addMetaKeyword(this.data.RESULT.LIST_SEARCHKEYWORDS, "listSearchKeywords", function(v, parentTag){
             return {
-                parentDom : parentTag, tagName: v, tagRatio: 0, tagType: "", tagPosition: "listSearchKeywords",  enableMenu: false };
+                parentDom : parentTag, tagName: v, tagRatio: 0, tagType: "", tagPosition: "listsearchkeywords",  enableMenu: false };
         });
 
         addMetaKeyword(this.data.RESULT.LIST_RECO_TARGET, "listRecoTarget", function(v, parentTag){
             return {
-                parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: "", tagPosition: "listRecoTarget",  enableMenu: false };
+                parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: "", tagPosition: "listrecotarget",  enableMenu: false };
         });
 
         addMetaKeyword(this.data.RESULT.METASCHARACTER, "listMetasCharacter", function(v, parentTag){
@@ -676,12 +694,12 @@ var MetaPopup = function() {
 
         addMetaKeyword(this.data.RESULT.LIST_RECO_SITUATION, "listRecoSituation", function(v, parentTag){
             return {
-                parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: "", tagPosition: "listRecoSituation", enableMenu: false };
+                parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: "", tagPosition: "listrecosituation", enableMenu: false };
         });
 
         addMetaKeyword(this.data.RESULT.LIST_AWARD, "listAward", function(v, parentTag){
             return {
-                parentDom : parentTag, tagName: v, tagRatio: 0, tagType: "", tagPosition: "listAward", enableMenu: false };
+                parentDom : parentTag, tagName: v, tagRatio: 0, tagType: "", tagPosition: "listaward", enableMenu: false };
         });
 
         // 미분류, 수상정보탭에 데이터가 있을 경우 * 표시 함
@@ -821,7 +839,6 @@ var MetaPopup = function() {
         // 닫기  승인 재수집 추출 처리
         $(".btnBig button").off();
         $(".btnBig button").click(function(e){
-        	debugger;	//저장시 메타키워드 누락 테스트
             if ( MetaPopupInstance.isUpdating() ) {
                 OM_ALERT("완료되지 않은 키워드가 있습니다<br> 작업 완료 후 다시 시도 바랍니다.");
                 return false;
@@ -841,25 +858,17 @@ var MetaPopup = function() {
                     break;
                 case "승인":
                     // 작업중
-                	debugger;	//저장시 메타키워드 누락 테스트
-                	console.log("[저장시 메타키워드 누락 테스트] 승인버튼 클릭");	//[저장시 메타키워드 누락 테스트]
                     var metaHistory = MetaHistoryManager.get();
                     if( metaHistory.length == 0 ) {
                         // 수정 사항이 없다면 승인하지 않음
                         OM_ALERT("수정 사항이 없습니다.");
 
                     } else {
-                    	//[저장시 메타키워드 누락 테스트]
-                    	console.log("[저장시 메타키워드 누락 테스트] items : JSON.stringify(metaHistory) = " + JSON.stringify(metaHistory));	//[저장시 메타키워드 누락 테스트]
-                        OM_API( APIS.METAS_UPT_ARRAY,{		//pop/meta/upt/array	[저장시 메타키워드 누락 테스트] 임시주석
+                        OM_API( APIS.METAS_UPT_ARRAY,{
                             itemid: MetaPopupInstance.itemId,
                             duration: durationValue,
                             items : JSON.stringify(metaHistory)
                         },function(response){
-                        	debugger;	//저장시 메타키워드 누락 테스트
-                        	console.log("[저장시 메타키워드 누락 테스트] response = ");	//저장시 메타키워드 누락 테스트
-                        	console.log(response);										//저장시 메타키워드 누락 테스트
-                        	
                         	//불용어사전 등록
                         	var strNotuse = $("#txtNotuse").val();
                         	if(strNotuse!=""){
@@ -1097,7 +1106,6 @@ var MetaPopup = function() {
             $("#"+parentTag+" .btn_add").click(function(){
             	//parentTag에서 메타 타입 추출
             	var strTagType = parentTag.substring(4).toLowerCase();
-            	console.log("strTagType : " + strTagType);
             	
                 var inputTempId = guid();
                 //기존
@@ -1107,7 +1115,6 @@ var MetaPopup = function() {
                 //여기까지 autoComplete
                 
                 $("#"+inputTempId).focus();
-                console.log("updateTempId : " + inputTempId);
 
 
                 $("#"+inputTempId).off();
@@ -1122,6 +1129,14 @@ var MetaPopup = function() {
                         // 만약 위치 이동이 불가한 경우 체크를 해서 메뉴를 막는다
                         var tagPosition = parentTag.replace("meta", "").toLowerCase();
 
+                        //중복입력 차단
+                    	if (metaKeyword.length > 0 ) {	//빈칸은 무시
+	                        if(fnDuplCnt(metaKeyword,tagPosition)){
+	                        	OM_ALERT("이미 등록되어 있는 키워드입니다.");
+	                        	return;
+	                        }
+                    	}
+                        
                         var enableMenu = true;
                         if ( parentTag.indexOf("list") >= 0 ){
                             enableMenu = false;
@@ -1167,6 +1182,9 @@ var MetaPopup = function() {
                             metaPosition,
                             metaName,
                             "del");
+                        
+                        //내용 지우기
+                        $(this).find("#displayTag").text("");
                     }
                 })
             });
@@ -1583,20 +1601,13 @@ var MetaTable = function() {
 
 //mcid로 동일 컨텐츠 검색
 function btnMcidSearch(){
-	
-	console.log("MetaPopupInstance = ");
-	console.log(MetaPopupInstance);
-	console.log("MetaPopupInstance.itemId = " + MetaPopupInstance.itemId);
-	
     OM_API( {url:"/pop/meta/mcidlist", method: "GET"},{
         itemid: MetaPopupInstance.itemId,
         target_type: "FT"	//?
     },function(response){
-    	console.log("response.RESULT");
-    	console.log(response.RESULT);
     	
         if ( response.RESULT.length == 0 ) {
-        	alert("해당 작품 없음");
+        	OM_ALERT("해당 작품 정보가 없습니다.");
         }else{
         	$("#tblMcidSearchResult > tbody").empty();
         	
@@ -1627,15 +1638,11 @@ function btnMcidSearch(){
 
 //태그정보 로딩
 function getTagsFromMcidSearchResult(code,stat,cnttag){
-	console.log("getTagsFromMcidSearchResult(code,stat,cnttag) - code = " + code + " , stat = " + stat + " , cnttag = " + cnttag );
 	
 	OM_API(
             APIS.METAS_META,
             {itemid: code},
             function(data){
-            	console.log("METAS_META 결과 데이터 : ");
-            	console.log(data);
-            	
                 addMetaKeyword(data.RESULT.METASWHEN, "metaWhen", function(v, parentTag){
                     return {
                         parentDom : parentTag,
@@ -1685,9 +1692,14 @@ function getTagsFromMcidSearchResult(code,stat,cnttag){
                         tagRatio: v.ratio,
                         tagType: v.type };
                 });
+                
+                //이하 항목
             	
             	//팝업창 숨기기
                 $("#ly_pop_mcidSearchResult").css("display","none");
+                
+                //편집 히스토리 리셋
+                MetaHistoryManager.reset();
             },
             function(){
                 console.log("Error")
@@ -1732,31 +1744,29 @@ function fnAutoCompletePop(obj){
 		}else if(e.keyCode==13){
 			autocomplete.style.display = "none";
 		}else{
-			// 안비어있다면 div를 보여준다.
-			var inputLeft = obj.offsetLeft+
-							obj.parentElement.offsetLeft+
-							obj.parentElement.parentElement.parentElement.parentElement.offsetLeft;
-			var inputTop  = obj.offsetTop+
-							obj.parentElement.offsetTop+
-							obj.parentElement.parentElement.parentElement.parentElement.offsetTop;
-			var inputHeight = obj.offsetHeight;
-			
-			autocomplete.style.display = "block";
-			autocomplete.style.position = "absolute";
-			autocomplete.style.left= inputLeft;
-			autocomplete.style.top = inputTop + inputHeight + 2;
-			
-			fillSearchResult(autocomplete,obj);
+			var tmp = this.parentElement.parentElement.getAttribute("id").substring(4).toLowerCase();
+			if(tmp=="character" || tmp=="emotion" || tmp=="what" || tmp=="when" || tmp=="where" || tmp=="who"){	//상단 6개 카테고리 한정
+				// 안비어있다면 div를 보여준다.
+				var inputLeft = obj.offsetLeft+
+								obj.parentElement.offsetLeft+
+								obj.parentElement.parentElement.parentElement.parentElement.offsetLeft;
+				var inputTop  = obj.offsetTop+
+								obj.parentElement.offsetTop+
+								obj.parentElement.parentElement.parentElement.parentElement.offsetTop;
+				var inputHeight = obj.offsetHeight;
+				
+				autocomplete.style.display = "block";
+				autocomplete.style.position = "absolute";
+				autocomplete.style.left= inputLeft;
+				autocomplete.style.top = inputTop + inputHeight + 2;
+				
+				fillSearchResult(autocomplete,obj);
+			}
 		}
 	};
 }
 
 function fillSearchResult(autocomplete,obj) {
-	debugger;
-	console.log("value = " + obj.value);
-	console.log("class1 = " + obj.getAttribute("data-type"));
-	console.log("class2 = " + obj.parentElement.parentElement.getAttribute("id").substring(4).toLowerCase());
-	
 	var strResult = "";
 	var strClass = obj.parentElement.parentElement.getAttribute("id").substring(4).toLowerCase();
 	var searchVal = obj.value;
@@ -1799,3 +1809,47 @@ function getElementsByAttribute(attributeName){
 	
 }
 
+//중복수 카운트(입력 vs 카테고리이동)
+//this오브젝트,대상카테고리,이동여부
+//대상카테고리에서 해당 키워드를 포함한 요소를 카운트한다.
+function fnDuplCnt(objValue,targetCate){//,moveCateYn
+	debugger;
+	var intDuplCnt = 0;
+	
+	//if(!moveCateYn){	//키워드 수정일 때
+	//	intDuplCnt--;	
+	//}
+	
+	//Start of 메타태그
+	//var objTargetCate = $("span[tag-posion="+targetCate+"] > a#displayTag.txt:visible").each(function(){
+	var objTargetCate = $("span[tag-posion="+targetCate+"] > a#displayTag.txt").each(function(){
+		$(this).text();
+	});
+	
+	debugger;
+	
+	for(var i=0 ; i<objTargetCate.length ; i++){
+		/*
+		//1.23 같은 숫자 들어가면 판별 못함. 키워드1.23로 읽어들임
+		if(objTargetCate[i].innerText == objValue){
+			intDuplCnt++;
+		}
+		*/
+		var tmpItem = objTargetCate[i].innerHTML;
+		var tmpIdx = tmpItem.indexOf("<em>");
+		if(tmpIdx>0){
+			if(tmpItem.substring(0,tmpIdx) == objValue){
+				intDuplCnt++;
+			}
+		}else{
+			if(objTargetCate[i].innerText == objValue){
+				intDuplCnt++;
+			}
+		}
+	}
+	//End of 메타태그
+	
+	
+	
+	return (intDuplCnt>0 ? true : false);
+}
