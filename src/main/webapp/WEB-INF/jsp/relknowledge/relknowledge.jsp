@@ -321,7 +321,7 @@ $("#btnUp").click(function(event) {
 			data: param,
 			dataType: "json",
 			success: function(data,textStatus,jqXHR){
-				alert("result success");
+				//alert("result success");
 				if ( OM_API_CKECK(data) == true ) {
 					successCallback(data,textStatus,jqXHR);
 				} else {
@@ -329,8 +329,8 @@ $("#btnUp").click(function(event) {
 				}
 			},
 			error: function(jqXHR,textStatus,errorThrown){
-				debugger;
-				alert("result error");
+				//debugger;
+				//alert("result error");
 				if ( textStatus == "timeout" ) {
 					OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
 				} else if (typeof jqXHR.responseText != "undefined" && jqXHR.responseText == "apiSessionError" ) {
