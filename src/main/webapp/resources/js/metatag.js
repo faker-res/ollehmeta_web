@@ -194,7 +194,7 @@ var MetaTag = function() {
             thisObject.editMode = true; // 수정 모드
 
             function release() {
-                var updateKeyword = $("#"+thisObject.tagId + " #updateTag").val() ;
+                var updateKeyword = $("#"+thisObject.tagId + " #updateTag").val().trim();
                 if (updateKeyword.length > 50 ) {
                     OM_ALERT("입력 글자 수를 50자 이상 넣을 수 없습니다.");
                     return;
@@ -1120,7 +1120,7 @@ var MetaPopup = function() {
                 $("#"+inputTempId).off();
                 $("#"+inputTempId).keyup(function(e){
                     if (e.keyCode == 13) {
-                        var metaKeyword = $(this).val();
+                        var metaKeyword = $(this).val().trim();
                         if (metaKeyword.length > 50 ) {
                             OM_ALERT("입력 글자 수를 50자 이상 넣을 수 없습니다.");
                             return;
