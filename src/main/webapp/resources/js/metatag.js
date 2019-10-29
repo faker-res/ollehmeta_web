@@ -1693,7 +1693,46 @@ function getTagsFromMcidSearchResult(code,stat,cnttag){
                         tagType: v.type };
                 });
                 
-                //이하 항목
+                //(이하 항목)
+                addMetaKeyword(data.RESULT.LIST_NOT_MAPPED, "metaUnclassified", function(v, parentTag){
+                    return {
+                        parentDom : parentTag,
+                        tagName: v.word,
+                        tagPosition: "list_not_mapped",
+                        tagRatio: v.ratio,
+                        tagType: v.type };
+                });
+                
+                //태그정보 로딩 - 팝업창에서 로드할 때는 없는 정보
+                addMetaKeyword(data.RESULT.LIST_SUBGENRE, "listSubGenre", function(v, parentTag){
+                    return {
+                        parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: v.type, tagPosition: "listsubgenre", enableMenu: false };
+                });
+
+                addMetaKeyword(data.RESULT.LIST_SEARCHKEYWORDS, "listSearchKeywords", function(v, parentTag){
+                    return {
+                        parentDom : parentTag, tagName: v, tagRatio: 0, tagType: "", tagPosition: "listsearchkeywords",  enableMenu: false };
+                });
+
+                addMetaKeyword(data.RESULT.LIST_RECO_TARGET, "listRecoTarget", function(v, parentTag){
+                    return {
+                        parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: "", tagPosition: "listrecotarget",  enableMenu: false };
+                });
+
+                addMetaKeyword(data.RESULT.METASCHARACTER, "listMetasCharacter", function(v, parentTag){
+                    return {
+                        parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: "", tagPosition: "listMetasCharacter",  enableMenu: false };
+                });
+
+                addMetaKeyword(data.RESULT.LIST_RECO_SITUATION, "listRecoSituation", function(v, parentTag){
+                    return {
+                        parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: "", tagPosition: "listrecosituation", enableMenu: false };
+                });
+
+                addMetaKeyword(data.RESULT.LIST_AWARD, "listAward", function(v, parentTag){
+                    return {
+                        parentDom : parentTag, tagName: v, tagRatio: 0, tagType: "", tagPosition: "listaward", enableMenu: false };
+                });
             	
             	//팝업창 숨기기
                 $("#ly_pop_mcidSearchResult").css("display","none");

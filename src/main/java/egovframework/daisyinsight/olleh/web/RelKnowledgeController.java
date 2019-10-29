@@ -53,13 +53,13 @@ public class RelKnowledgeController extends CommonController {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");		//[파일업다운로드]
     	
     	
-    	System.out.println("[파일업다운로드] " + format.format(new Date()) + " frelknowledgeCsvFileUpload 시작");
+    	//logger.info("[파일업다운로드] " + format.format(new Date()) + " frelknowledgeCsvFileUpload 시작");
     	//목표 : 엑셀 파일을 JSON String으로 리턴
     	byte[] readByte = null;
     	String readString = "";
     	
     	readByte = uploadfile.getBytes();
-    	System.out.println("[파일업다운로드] " + format.format(new Date()) + " readByte = uploadfile.getBytes();");
+    	//logger.info("[파일업다운로드] " + format.format(new Date()) + " readByte = uploadfile.getBytes();");
     	
 		int byteSize = readByte.length;
 		int viewSize = 0;
@@ -80,7 +80,7 @@ public class RelKnowledgeController extends CommonController {
     	int intDatas = 0;
     	//int intColSize = 0;
     	
-    	System.out.println("[파일업다운로드] " + format.format(new Date()) + " line 반복문 시작");
+    	//logger.info("[파일업다운로드] " + format.format(new Date()) + " line 반복문 시작");
     	
     	for(String line : arrReadString){
     		String[] arrCell = line.split(seperator);
@@ -141,7 +141,7 @@ public class RelKnowledgeController extends CommonController {
     		intDatas++;	//위에서 여기로
     		
     	}
-    	System.out.println("[파일업다운로드] " + format.format(new Date()) + " line 반복문 끝");
+    	//logger.info("[파일업다운로드] " + format.format(new Date()) + " line 반복문 끝");
     	strResult = strResult.substring(0, strResult.length()-1);
     	strResult += "]";
     	
@@ -154,11 +154,11 @@ public class RelKnowledgeController extends CommonController {
 		mav.addObject("strResult", strResult);
 		mav.addObject("strMessage", strMessage);
 		mav.addObject("strType", strType);
-		System.out.println("♨♨♨♨♨♨♨♨    리턴합니다");
+		//logger.info("[파일업다운로드] 리턴합니다");
 
 		//디버그로 하면 자바소스 디버깅은 되지만 jsp로 리턴이 안됨.
 		
-    	System.out.println("[파일업다운로드] " + format.format(new Date()) + " frelknowledgeCsvFileUpload 끝");
+    	//logger.info("[파일업다운로드] " + format.format(new Date()) + " frelknowledgeCsvFileUpload 끝");
 		return mav;
     }
 

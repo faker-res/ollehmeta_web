@@ -136,7 +136,7 @@ $("#btnUp").click(function(event) {
 //			);
 
 			if (strMessage != "") {
-				alert(strMessage);
+				OM_ALERT(strMessage);
 				return false;
 			}
 			
@@ -282,7 +282,7 @@ $("#btnUp").click(function(event) {
 			}
 			
 			if(intErrCount<1){
-				alert("ok");
+				OM_ALERT("ok");
 				Loading(false);
 			}
 			
@@ -323,7 +323,16 @@ $("#btnUp").click(function(event) {
 			success: function(data,textStatus,jqXHR){
 				//alert("result success");
 				if ( OM_API_CKECK(data) == true ) {
-					successCallback(data,textStatus,jqXHR);
+					//successCallback(data,textStatus,jqXHR);
+					
+					var blob = new Blob([jqXHR.responseText], {type: "text/plain"});
+				    objURL = window.URL.createObjectURL(blob);
+				    
+				    var a = document.createElement('a');
+				    a.href = objURL;
+				    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
+				    a.click();				    
+				    
 				} else {
 					Loading(false);
 				}
@@ -339,7 +348,15 @@ $("#btnUp").click(function(event) {
 					})
 				} else {
 					//OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"+textStatus+"<br><br>----------------<br>" +jqXHR.responseText +"<br>----------------");
-					window.open(jqXHR.responseText);
+					var blob = new Blob([jqXHR.responseText], {type: "text/plain"});
+				    objURL = window.URL.createObjectURL(blob);
+				    
+				    var a = document.createElement('a');
+				    a.href = objURL;
+				    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
+				    a.click();
+				    
+				    
 				}
 			},	
 			complete: function() {	
@@ -347,4 +364,15 @@ $("#btnUp").click(function(event) {
 			}	
 		});
 	});
+	
+	
+	//https://javafactory.tistory.com/1580 yyyymmdd 형태로 포멧팅하여 날짜 반환
+	Date.prototype.yyyymmdd = function()
+	{
+	    var yyyy = this.getFullYear().toString();
+	    var mm = (this.getMonth() + 1).toString();
+	    var dd = this.getDate().toString();
+	 
+	    return yyyy + (mm[1] ? mm : '0'+mm[0]) + (dd[1] ? dd : '0'+dd[0]);
+	}
 </script>

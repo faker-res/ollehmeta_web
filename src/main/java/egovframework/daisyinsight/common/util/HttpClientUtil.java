@@ -91,8 +91,13 @@ public class HttpClientUtil {
 
         StringBuffer result = new StringBuffer();
         String line = "";
+        //csv download
+        String strNewline = "\n";
+        if(url.indexOf("/download")<0) {	// /relknowledge/download/type , /admin/dic/keywords/download
+        	strNewline = "";	//csv download
+        }
         while ((line = rd.readLine()) != null) {
-            result.append(line);
+            result.append(line+strNewline);
         }
         System.out.println("Response Msg : " + result.toString());
         return result.toString();
