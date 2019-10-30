@@ -162,7 +162,7 @@
                 <label for="chk_014">
                     <input type="checkbox" id="chk_014" value="recotarget" >
                     <span class="ic"></span>
-                    <span class="txt">추천대상</span>
+                    <span class="txt">추천표현</span><%--<span class="txt">추천대상</span>--%>
                 </label>
                 <label for="chk_015">
                     <input type="checkbox" id="chk_015" value="recositu" >
@@ -222,7 +222,7 @@
                 <col width="135px">
                 <col width="62px">
                 <col width="62px">
-                <col width="68px">
+                <col width="120px">
                 <col width="68px">
                 <col width="106px">
                 <col width="62px">

@@ -314,6 +314,7 @@
 
                 $("#dicType a").removeClass("current");
                 $(this).addClass("current");
+                $("#cboOrder").val("new").prop("selected",true);//최신순 강제 선택
                 loadDictionary();
             });
 
@@ -392,7 +393,6 @@
             //CSV 다운로드
             $(".btnDown").click(function(){
             	var type = $("#dicType .current").attr("value").toLowerCase();
-            	alert("btnDown - type:["+type+"]");
             	
                 Loading(true);
                 
@@ -410,33 +410,50 @@
                     method: "POST",
                     data: param,
                     dataType: "json",
-                    success: function(data,textStatus,jqXHR){
-
-                        if ( OM_API_CKECK(data) == true ) {
-                            successCallback(data,textStatus,jqXHR);
-                        } else {
-                            Loading(false);
-                        }
-                    },
-                    error: function(jqXHR,textStatus,errorThrown){
-                        //failCallback(jqXHR,textStatus,errorThrown);
-
-                        if ( textStatus == "timeout" ) {
-                            OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
-                        } else if (typeof jqXHR.responseText != "undefined" && jqXHR.responseText == "apiSessionError" ) {
-                            OM_ALERT("세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)", function() {
-                                location.href = "/";
-                            })
-                        } else {
-                            //OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"+textStatus+"<br><br>----------------<br>" +jqXHR.responseText +"<br>----------------");
-                        	window.open(jqXHR.responseText);
-                        }
-
-                    },
-                    complete: function() {
-                        Loading(false);
-                    }
-
+        			success: function(data,textStatus,jqXHR){
+        				//alert("result success");
+        				if ( OM_API_CKECK(data) == true ) {
+        					//successCallback(data,textStatus,jqXHR);
+        					
+        					var blob = new Blob([jqXHR.responseText], {type: "text/plain"});
+        				    objURL = window.URL.createObjectURL(blob);
+        				    
+        				    var a = document.createElement('a');
+        				    a.href = objURL;
+        				    //a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
+        				    a.download = "DIC_KEYWORDS_"+type.toUpperCase()+".csv";
+        				    a.click();				    
+        				    
+        				} else {
+        					Loading(false);
+        				}
+        			},
+        			error: function(jqXHR,textStatus,errorThrown){
+        				//debugger;
+        				//alert("result error");
+        				if ( textStatus == "timeout" ) {
+        					OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
+        				} else if (typeof jqXHR.responseText != "undefined" && jqXHR.responseText == "apiSessionError" ) {
+        					OM_ALERT("세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)", function() {
+        						location.href = "/";
+        					})
+        				} else {
+        					//OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"+textStatus+"<br><br>----------------<br>" +jqXHR.responseText +"<br>----------------");
+        					var blob = new Blob([jqXHR.responseText], {type: "text/plain"});
+        				    objURL = window.URL.createObjectURL(blob);
+        				    
+        				    var a = document.createElement('a');
+        				    a.href = objURL;
+        				    //a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
+        				    a.download = "DIC_KEYWORDS_"+type.toUpperCase()+".csv";
+        				    a.click();
+        				    
+        				    
+        				}
+        			},	
+        			complete: function() {	
+        				Loading(false);
+        			}	
                 });
             });
 			
@@ -498,12 +515,15 @@
 		                    data: param,
 		                    dataType: "json",	//혹시 file 인가
 		                    success: function(data,textStatus,jqXHR){
-		                        alert("ok " + data.rtmsg);
+		                        //alert("ok " + data.rtmsg);
+		                        OM_ALERT("업로드가 완료되었습니다.");
 		                        
 		                        //모래시계 없애기
 		                        Loading(false);
 		                        
 		                        //새로고침 로직
+		                        $("#cboOrder").val("new").prop("selected",true);//최신순 강제 선택
+		                        loadDictionary();
 		                    },
 		                    error: function(jqXHR,textStatus,errorThrown){
 		                        //failCallback(jqXHR,textStatus,errorThrown);

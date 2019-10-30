@@ -293,6 +293,30 @@ var MetaTag = function() {
                     release()
                 }
             });
+            
+            //setTimeout(function(){document.getElementById("autocomplete").style.display = "none";},500);
+            $("#"+thisObject.tagId + " #updateTag").blur(function(event) {
+            	debugger;
+            	
+            	setTimeout(function(){document.getElementById("autocomplete").style.display = "none";},500);
+            	
+            	//thisObject.editMode = false;
+            });
+            
+            //자동완성 선택 ㄱ 한자 1
+            /*
+            $("#"+thisObject.tagId + "").change(function(e) {	// #updateTag
+            	//var tmp = $("#"+thisObject.tagId + "").val();	// #updateTag
+            	var tmp = $("input[data-id="+thisObject.tagId+"]").val();	// #updateTag
+            	
+                if(tmp.indexOf("　")==tmp.length-1){
+                	if(tmp.length>0){
+	                	tmp = tmp.substring(0,tmp.length-1);
+	                	alert("tmp = [" + tmp + "]")
+                	}
+                }
+            });
+            */
             event.preventDefault();
             return false;
         });
@@ -1163,7 +1187,15 @@ var MetaPopup = function() {
                         $("#"+inputTempId).off();
                         $("#"+inputTempId).remove();
                     }
-                })
+                });
+                
+                $("#"+inputTempId).blur(function(event) {
+                	debugger;
+                	
+                	setTimeout(function(){document.getElementById("autocomplete").style.display = "none";},500);
+                	
+                	//thisObject.editMode = false;
+                });
             });
 
             // 해당 서브 카테고리 일괄 삭제 기능
@@ -1767,7 +1799,8 @@ function fnAutoCompletePop(obj){
 	/*
 	//요거 하면 추천검색창에서 클릭을 못하고
 	searchKeyword.onblur = function(e){
-		document.getElementById("autocomplete").style.display = "none";
+		//document.getElementById("autocomplete").style.display = "none";
+		setTimeout(function(){document.getElementById("autocomplete").style.display = "none";},500);
 	}
 	*/
 	
@@ -1836,9 +1869,19 @@ function selectData(that,objId) {
 		}else{
 			searchKeyword = objSearchKeyword;
 		}
+		
 		searchKeyword.value = that.innerText;
+		//searchKeyword.value = that.innerText + "　";	//ㄱ 한자 1
+		
+		debugger;
+		var enter = jQuery.Event("keyup",{which:13});
+		//$("input[data-id="+objId+"]").trigger(enter);
+		$("#"+objId).trigger(enter);
 	}
 	
+	//편집모드 해제
+	//debugger;
+	//that.editMode = false;
 	
 	var autocomplete = document.getElementById("autocomplete");
 	autocomplete.style.display = "none";

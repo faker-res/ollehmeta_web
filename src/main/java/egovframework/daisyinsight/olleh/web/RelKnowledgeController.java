@@ -72,6 +72,9 @@ public class RelKnowledgeController extends CommonController {
     	
     	//to Json String {word: "키워드", target_type: "WHEN", target_word: "키워드", action: "add"}
     	String[] arrReadString = readString.split(lineFeed);
+    	if(arrReadString.length<2) {	//Windows에서 lineFeed는 \r\n인데 여기서 생성된 파일(줄바꿈 \n)은 split이 안되어서
+    		arrReadString = readString.split("\n");
+    	}
     	String strResult = "[";
     	String strMessage = "";
     	String strTmpCol = "";
