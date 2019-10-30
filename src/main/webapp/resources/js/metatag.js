@@ -384,6 +384,8 @@ var MetaTag = function() {
         var gotoPosition = $(dom).attr("id").replace("Position", "")
         if ( gotoPosition != thisObject.parentDom ) {
             var targetPosition = gotoPosition.replace("meta", "").toLowerCase();
+            var currentPosition = thisObject.parentDom.replace("meta", "").toLowerCase();
+            
             //중복입력 차단
             if(fnDuplCnt(thisObject.tagName,targetPosition)){
             	OM_ALERT("이미 등록되어 있는 키워드입니다.");
@@ -411,10 +413,18 @@ var MetaTag = function() {
                 tagType: "update"
             }).add()
             
-            //불용어사전 등록
+            //불용어사전 등록 - 수정 10.30
             if(targetPosition=="notuse"){
-            	var strNotuse = $("#txtNotuse").val() + (($("#txtNotuse").val()=="") ? "" : "////") + thisObject.tagName;
+            	//var strNotuse = $("#txtNotuse").val() + (($("#txtNotuse").val()=="") ? "" : "////") + thisObject.tagName;
+            	//$("#txtNotuse").val(strNotuse);
+            	
+            	//구분자 : 키워드1////cate1////////키워드2////cate2
+            	//카테고리 추가 - 사전에서 지워야 하므로
+            	var strNotuse = $("#txtNotuse").val()
+            					+ (($("#txtNotuse").val()=="") ? "" : "////////")
+            					+ thisObject.tagName  + "////" + currentPosition;
             	$("#txtNotuse").val(strNotuse);
+            	
             }
         }
 
@@ -896,6 +906,11 @@ var MetaPopup = function() {
                         	//불용어사전 등록
                         	var strNotuse = $("#txtNotuse").val();
                         	if(strNotuse!=""){
+                        		debugger;
+                        		
+                        		$("#txtNotuse").val("");
+                        		
+                        		/*
 	                        	var arrStrNotuse = strNotuse.split("////");
 	                        	
 	                        	var metaHistory = [];
@@ -920,14 +935,62 @@ var MetaPopup = function() {
 	                                    console.log("Error")
 	                                }
 	                            );
+	                            */
+                        		var arrStrNotuse = strNotuse.split("////////");
+	                        	var metaHistory = [];
+	                        	var metaDelHistory = [];
+	                        	var itemMetaHistory = {};
+	                        	var itemMetaDelHistory = {};
+	                        	
+	                        	for(var i in arrStrNotuse){
+	                        		itemMetaHistory = {
+	                            		word:arrStrNotuse[i].split("////")[0],
+	                            		target_type: "NOTUSE",
+	                            		target_word: arrStrNotuse[i].split("////")[0],
+	                            		action: "add"
+	                            		//,
+                            			//original_type: arrStrNotuse[i].split("////")[1]
+	                            	};
+	                        		itemMetaDelHistory = {
+	                            		word:arrStrNotuse[i].split("////")[0],
+	                            		target_type: arrStrNotuse[i].split("////")[1],
+	                            		target_word: arrStrNotuse[i].split("////")[0],
+	                            		action: "del"
+	                        		}
+	                        		
+	                        		metaHistory[i] = itemMetaHistory;
+	                        		metaDelHistory[i] = itemMetaDelHistory;
+	                        	}
+	                        	
+	                        	//1. 불용어사전 등록
+	                            OM_API(
+	                                APIS.DIC_UPT_ARRAY, {		///dic/upt/array
+	                                    items: JSON.stringify(metaHistory)
+	                                }, function(data){
+	                                    //OM_ALERT("불용어사전에 등록되었습니다.");
+	                                }, function(){
+	                                    console.log("Error")
+	                                }
+	                            );
+	                            
+	                            //2. 메타사전에서 삭제
+	                            OM_API(
+	                                APIS.DIC_UPT_ARRAY, {		///dic/upt/array
+	                                    items: JSON.stringify(metaDelHistory)
+	                                }, function(data){
+	                                    //OM_ALERT("불용어사전에 등록되었습니다.");
+	                                }, function(){
+	                                    console.log("Error")
+	                                }
+	                            );
                         	}
                         	
                         	//(승인 기존 로직)
                             //alert("API 수정 요청")
                             metaLayerAction();
-                            OM_ALERT("승인 완료 했습니다.");
-                            debugger;	//저장시 메타키워드 누락 테스트
                             MetaHistoryManager.reset();
+                            OM_ALERT("승인 완료 했습니다.");
+                            //debugger;	//저장시 메타키워드 누락 테스트
 
                             var pageNo = $(".pagenation .current").attr("value");
                             searchExecute(pageNo);
