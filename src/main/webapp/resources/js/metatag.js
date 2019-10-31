@@ -120,6 +120,11 @@ var MetaTag = function() {
             tagName : tagName
         });
 
+    	//빈칸이면 오브젝트 추가 실행 안함
+    	if(this.tagName == ""){
+    		return false;
+    	}
+    	
         var thisObject = this;
         marker.find("input[type=radio]").each(function(){
             $(this).attr("name", thisObject.tagId+"-radio");
@@ -186,7 +191,14 @@ var MetaTag = function() {
             $("#"+thisObject.tagId).addClass("tag_add");
             $("#"+thisObject.tagId + " .btn_del").hide();
 
-            $("#"+thisObject.tagId + " #updateTag").val(thisObject.tagName);
+            //기존 로직에서 → data-original이 없으면 기존로직, 있으면 data-original로
+            //$("#"+thisObject.tagId + " #updateTag").val(thisObject.tagName);
+            if(!$("#"+thisObject.tagId + " #updateTag").attr("data-original")){
+            	$("#"+thisObject.tagId + " #updateTag").val(thisObject.tagName);
+            }else{
+            	$("#"+thisObject.tagId + " #updateTag").val($("#"+thisObject.tagId + " #updateTag").attr("data-original"));
+            }
+
             
             $("#"+thisObject.tagId).find("#updateTag").attr("data-id",thisObject.tagId);
             $("#"+thisObject.tagId).find("#updateTag").attr("data-original",thisObject.tagName);
@@ -217,7 +229,7 @@ var MetaTag = function() {
                     thisObject.tagPosition,
                     updateKeyword,
                     "mod");
-
+                
                 if ( thisObject.tagGroup == "DIC") {
                     $("#"+thisObject.tagId).attr("class","tag");
                     if ( thisObject.tagName != $("#"+thisObject.tagId + " #updateTag").val() ){
@@ -280,7 +292,17 @@ var MetaTag = function() {
 
                     $("#"+thisObject.tagId + " .btn_del").show();
                 }
-
+                
+                //빈칸이면 숨김 - 
+                if (updateKeyword.length < 1 ) {
+                	//$("#"+thisObject.tagId).hide();
+                	//return;
+                	//debugger;
+                	
+                	//x 버튼 트리거(기존거 더블클릭 수정 → 빈칸)
+                	//debugger;
+                	$("#"+thisObject.tagId + " > a.btn_del").get(0).click();
+                }
             }
             //$("#"+thisObject.tagId + " #updateTag").mouseleave(function(e) {
             //    release();
@@ -294,13 +316,9 @@ var MetaTag = function() {
                 }
             });
             
-            //setTimeout(function(){document.getElementById("autocomplete").style.display = "none";},500);
             $("#"+thisObject.tagId + " #updateTag").blur(function(event) {
-            	debugger;
-            	
+            	//텍박이 포커스를 잃어면 자동완성 숨기기
             	setTimeout(function(){document.getElementById("autocomplete").style.display = "none";},500);
-            	
-            	//thisObject.editMode = false;
             });
             
             //자동완성 선택 ㄱ 한자 1
@@ -880,6 +898,7 @@ var MetaPopup = function() {
 
             var actionName = $(this).html();
             var durationValue = $( "#metaDuation option:selected" ).val();
+            var userId = $( "#userId" ).val();		//로그인 중인 사용자정보 저장
             switch (actionName) {
                 case "닫기":
                     OM_CONFIRM("메타수정을 취소 하시겠습니까?",
@@ -901,7 +920,8 @@ var MetaPopup = function() {
                         OM_API( APIS.METAS_UPT_ARRAY,{
                             itemid: MetaPopupInstance.itemId,
                             duration: durationValue,
-                            items : JSON.stringify(metaHistory)
+                            items : JSON.stringify(metaHistory),
+                            userId : userId		//로그인 중인 사용자정보 저장
                         },function(response){
                         	//불용어사전 등록
                         	var strNotuse = $("#txtNotuse").val();
@@ -910,32 +930,6 @@ var MetaPopup = function() {
                         		
                         		$("#txtNotuse").val("");
                         		
-                        		/*
-	                        	var arrStrNotuse = strNotuse.split("////");
-	                        	
-	                        	var metaHistory = [];
-	                        	var itemMetaHistory = {};
-	                        	for(var i in arrStrNotuse){
-	                        		itemMetaHistory = {
-	                            		word:arrStrNotuse[i],
-	                            		target_type: "NOTUSE",
-	                            		target_word: arrStrNotuse[i],
-	                            		action: "add"
-	                            	};
-	                        		
-	                        		metaHistory[i] = itemMetaHistory;
-	                        	}
-	                        	
-	                            OM_API(
-	                                APIS.DIC_UPT_ARRAY, {
-	                                    items: JSON.stringify(metaHistory)
-	                                }, function(data){
-	                                    //OM_ALERT("불용어사전에 등록되었습니다.");
-	                                }, function(){
-	                                    console.log("Error")
-	                                }
-	                            );
-	                            */
                         		var arrStrNotuse = strNotuse.split("////////");
 	                        	var metaHistory = [];
 	                        	var metaDelHistory = [];
@@ -989,12 +983,15 @@ var MetaPopup = function() {
                             //alert("API 수정 요청")
                             metaLayerAction();
                             MetaHistoryManager.reset();
+                            /*
                             OM_ALERT("승인 완료 했습니다.");
-                            //debugger;	//저장시 메타키워드 누락 테스트
-
                             var pageNo = $(".pagenation .current").attr("value");
                             searchExecute(pageNo);
-
+							*/
+                            OM_ALERT("승인 완료 했습니다.",function(){
+                                var pageNo = $(".pagenation .current").attr("value");
+                                searchExecute(pageNo);
+                            });
                         },function(){
                             console.log("Ajax ResponseError");
                         });
@@ -1014,6 +1011,8 @@ var MetaPopup = function() {
                             duration: durationValue,
                             sendnow: "Y",
                             items : JSON.stringify(metaHistory)
+                            ,
+                            userId : userId		//로그인 중인 사용자정보 저장
                         },function(response){
                             //alert("API 수정 요청")
                             metaLayerAction();
@@ -1212,7 +1211,7 @@ var MetaPopup = function() {
                             OM_ALERT("입력 글자 수를 50자 이상 넣을 수 없습니다.");
                             return;
                         }
-
+                        
                         // 만약 위치 이동이 불가한 경우 체크를 해서 메뉴를 막는다
                         var tagPosition = parentTag.replace("meta", "").toLowerCase();
 
@@ -1249,15 +1248,14 @@ var MetaPopup = function() {
                         // input 창 삭제
                         $("#"+inputTempId).off();
                         $("#"+inputTempId).remove();
+                        
+
                     }
                 });
                 
                 $("#"+inputTempId).blur(function(event) {
-                	debugger;
-                	
+                	//텍박이 포커스를 잃어면 자동완성 숨기기
                 	setTimeout(function(){document.getElementById("autocomplete").style.display = "none";},500);
-                	
-                	//thisObject.editMode = false;
                 });
             });
 
@@ -1921,15 +1919,21 @@ function fillSearchResult(autocomplete,obj) {
 
 function selectData(that,objId) {
 	var searchKeyword;
+	var objSearchKeyword;
+	var tagNewUpdate;
 	if(objId=="updateTag"){
 		searchKeyword = that.parentElement.parentElement.parentElement.parentElement.getElementsByClassName("metaUpdateInput")[0];
 		searchKeyword.value = that.innerText;
 	}else{
-		var objSearchKeyword = document.getElementById(objId);
+		objSearchKeyword = document.getElementById(objId);
 		
 		if(objSearchKeyword.tagName.toLowerCase()=="span"){
+			//수정
+			tagNewUpdate = "update";
 			searchKeyword = document.querySelectorAll("[data-id='"+objId+"']")[0];
 		}else{
+			//추가
+			tagNewUpdate = "new"
 			searchKeyword = objSearchKeyword;
 		}
 		
@@ -1937,17 +1941,106 @@ function selectData(that,objId) {
 		//searchKeyword.value = that.innerText + "　";	//ㄱ 한자 1
 		
 		debugger;
+		/*
 		var enter = jQuery.Event("keyup",{which:13});
 		//$("input[data-id="+objId+"]").trigger(enter);
 		$("#"+objId).trigger(enter);
+		*/
 	}
-	
-	//편집모드 해제
-	//debugger;
-	//that.editMode = false;
 	
 	var autocomplete = document.getElementById("autocomplete");
 	autocomplete.style.display = "none";
+	
+	
+	//신규일 때 - 그냥 생성
+	if(tagNewUpdate == "new"){
+		var parentTag = objSearchKeyword.parentElement.parentElement.id;
+		var metaKeyword = that.innerText;
+		
+        var strTagType = parentTag.substring(4).toLowerCase();
+        var tagType = ($("#list_"+strTagType).find("option[value='"+metaKeyword+"']").length>0) ? "update" : "new";
+        
+        var enableMenu = true;
+        if ( parentTag.indexOf("list") >= 0 ){
+            enableMenu = false;
+        }
+        
+        //from addMetaAppend - $("#"+inputTempId).keyup(function(e) - if (e.keyCode == 13)
+        (new MetaTag()).init({
+            parentDom : parentTag,
+            tagName: metaKeyword ,
+            tagPosition: strTagType,	//tagPosition,
+            tagRatio: "0",
+            //tagType: "update",	//배경색
+            tagType: tagType,	//배경색
+            enableMenu: enableMenu
+        }).add();
+        MetaHistoryManager.add(metaKeyword ,
+            strTagType,					//tagPosition,
+            metaKeyword,
+            "add");
+
+        // input 창 삭제
+        $("#"+objId).off();
+        $("#"+objId).remove();
+	}else{
+		var parentTag = objSearchKeyword.parentElement.id;
+		var metaKeyword = that.innerText;	//자동에서 클릭한거
+		var oldMetaKeyword = document.querySelectorAll("[data-id='"+objId+"']")[0].getAttribute("data-original");
+		
+		if(metaKeyword != oldMetaKeyword){
+			document.querySelectorAll("[data-id='"+objId+"']")[0].value = metaKeyword;
+			
+			//배경색
+			var strTagType = parentTag.substring(4).toLowerCase();
+			
+			var addTagType = ($("#list_"+strTagType).find("option[value='"+that.innerText+"']").length>0) ? "bgc_4" : "bgc_3";	//bgc_4:update , bgc_3:new
+			var removeTagType = ($("#list_"+strTagType).find("option[value='"+that.innerText+"']").length>0) ? "bgc_3" : "bgc_4";	//bgc_4:update , bgc_3:new
+			
+			document.querySelectorAll("[data-id='"+objId+"']")[0].parentElement.getElementsByClassName("txt")[0].text = metaKeyword + "<em></em>";
+			
+			document.querySelectorAll("[data-id='"+objId+"']")[0].parentElement.classList.remove(removeTagType);
+			document.querySelectorAll("[data-id='"+objId+"']")[0].parentElement.classList.add("tag");
+			document.querySelectorAll("[data-id='"+objId+"']")[0].parentElement.classList.add(addTagType);
+			
+			document.querySelectorAll("[data-id='"+objId+"']")[0].parentElement.getElementsByClassName("metaUpdateInput")[0].setAttribute("data-original",metaKeyword);
+			
+			//MetaTag에서 where value 찾아서 넣기
+			
+			
+	        MetaHistoryManager.add(
+        		oldMetaKeyword ,
+                strTagType,
+                metaKeyword,
+                "mod"
+            );
+		}else{
+			var strTagType = parentTag.substring(4).toLowerCase();
+			
+			/*
+			document.querySelectorAll("[data-id='"+objId+"']")[0].parentElement.addClass("tag");
+			
+			//자동완성
+			document.querySelectorAll("[data-id='"+objId+"']")[0].getElementsByClass("metaUpdateInput")[0].setAttribute("data-type",strTagType);
+			*/
+			
+			//document.querySelectorAll("[data-id='"+objId+"']")[0].parentElement.getElementsByClassName("txt")[0].text = metaKeyword + "<em></em>";
+			
+			//document.querySelectorAll("[data-id='"+objId+"']")[0].parentElement.classList.remove(removeTagType);
+			document.querySelectorAll("[data-id='"+objId+"']")[0].parentElement.classList.add("tag");
+			//document.querySelectorAll("[data-id='"+objId+"']")[0].parentElement.classList.add(addTagType);
+			
+			document.querySelectorAll("[data-id='"+objId+"']")[0].parentElement.getElementsByClassName("metaUpdateInput")[0].setAttribute("data-original",metaKeyword);
+		}
+
+		$("#"+objId + " #displayTag").text(that.innerText);
+		$("#"+objId + " #displayTag").show();
+		$("#"+objId + " #updateTag").hide();
+		$("#"+objId).removeClass("tag_add");
+
+		$("#"+objId + " .btn_del").show();
+	}
+	
 }
 
 function getElementsByAttribute(attributeName){
@@ -1958,12 +2051,8 @@ function getElementsByAttribute(attributeName){
 //this오브젝트,대상카테고리,이동여부
 //대상카테고리에서 해당 키워드를 포함한 요소를 카운트한다.
 function fnDuplCnt(objValue,targetCate){//,moveCateYn
-	debugger;
+	//debugger;
 	var intDuplCnt = 0;
-	
-	//if(!moveCateYn){	//키워드 수정일 때
-	//	intDuplCnt--;	
-	//}
 	
 	//Start of 메타태그
 	//var objTargetCate = $("span[tag-posion="+targetCate+"] > a#displayTag.txt:visible").each(function(){
@@ -1971,7 +2060,7 @@ function fnDuplCnt(objValue,targetCate){//,moveCateYn
 		$(this).text();
 	});
 	
-	debugger;
+	//debugger;
 	
 	for(var i=0 ; i<objTargetCate.length ; i++){
 		/*
@@ -1993,8 +2082,6 @@ function fnDuplCnt(objValue,targetCate){//,moveCateYn
 		}
 	}
 	//End of 메타태그
-	
-	
 	
 	return (intDuplCnt>0 ? true : false);
 }

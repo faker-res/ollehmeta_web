@@ -281,7 +281,9 @@
 <!-- 레이어 팝업 -->
 <div id="ly_autopop_01" class="mod_layer" style="display: none;">
 	<!-- 불용키워드에 입력할 항목 임시 저장소 -->
-	<input type="hidden" id="txtNotuse" name="txtNotuse" value=""/>
+	<input type="hidden" id="txtNotuse" name="txtNotuse" value="" style="width:800px;"/>
+	<!-- 로그인 중인 사용자정보 저장 -->
+	<input type="hidden" id="userId" name="userId" value="<%=userId%>" style="width:800px;"/>
 
     <div class="layInner">
         <div id="ly_movieInfo"> </div>
