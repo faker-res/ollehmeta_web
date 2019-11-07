@@ -1015,6 +1015,12 @@
         });
         
         
+        /*
+        //테스트 11.05 : 자동완성 조회 안함
+        if("1"=="1"){
+        	return;
+        }
+        
         //처음 1회만 조회 - 모든 텍박이 비어 있을때만 조회함
         if($("#txtList_when").val() || $("#txtList_where").val() || $("#txtList_what").val() || 
         	$("#txtList_who").val() || $("#txtList_emotion").val() || $("#txtList_character").val() ){
@@ -1074,7 +1080,7 @@
         for(var i in arrParam){
             fnLoadDic(arrParam[i].apiParam.split("\"")[3],arrParam[i]);
         }
-        
+        */
         
     }
     

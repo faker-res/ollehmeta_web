@@ -78,8 +78,9 @@
 						<option value="abc">가나다순</option>
 					</select>
 					<span class="_bar"></span>
-					<form id="formFileCsv" action="/dictionaryCsvFileUpload.do" enctype="multipart/form-data" method="post">
+					<form id="formFileCsv" enctype="multipart/form-data" method="post">
 					<input type="file" id="fileCsv" name="fileCsv" style="width:0px;"/>
+					<input type="hidden" name="type" />
 					</form>
 					<button type="button" class="btnUp">CSV 업로드</button>
 					<button type="button" class="btnDown">CSV 다운로드</button>
@@ -394,8 +395,6 @@
             $(".btnDown").click(function(){
             	var type = $("#dicType .current").attr("value").toLowerCase();
             	
-                Loading(true);
-                
                 var param = {
                     apiUrl   : JSON.stringify({url : "/admin/dic/keywords/download",method : "GET"}),
                     apiParam : JSON.stringify({type : type}||{})
@@ -415,17 +414,23 @@
         				if ( OM_API_CKECK(data) == true ) {
         					//successCallback(data,textStatus,jqXHR);
         					
+        					
+        				    //구버전 : 파일경로 띄우기
+        				    window.open(jqXHR.responseText);
+        					
+        					/*
+        					//신버전 : 데이터를 그대로 태우기 - 느림
         					var blob = new Blob([jqXHR.responseText], {type: "text/plain"});
         				    objURL = window.URL.createObjectURL(blob);
         				    
         				    var a = document.createElement('a');
         				    a.href = objURL;
-        				    //a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
-        				    a.download = "DIC_KEYWORDS_"+type.toUpperCase()+".csv";
+        				    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
         				    a.click();				    
+        				    */			    
         				    
         				} else {
-        					Loading(false);
+        					//Loading(false);
         				}
         			},
         			error: function(jqXHR,textStatus,errorThrown){
@@ -439,14 +444,20 @@
         					})
         				} else {
         					//OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"+textStatus+"<br><br>----------------<br>" +jqXHR.responseText +"<br>----------------");
+							
+        				    //구버전 : 파일경로 띄우기
+        				    window.open(jqXHR.responseText);
+        					
+        					/*
+        					//신버전 : 데이터를 그대로 태우기 - 느림
         					var blob = new Blob([jqXHR.responseText], {type: "text/plain"});
         				    objURL = window.URL.createObjectURL(blob);
         				    
         				    var a = document.createElement('a');
         				    a.href = objURL;
-        				    //a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
-        				    a.download = "DIC_KEYWORDS_"+type.toUpperCase()+".csv";
-        				    a.click();
+        				    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
+        				    a.click();				    
+        				    */
         				    
         				    
         				}
@@ -472,6 +483,8 @@
             //CSV 업로드
             $("#fileCsv").change(function(){
 			    var form = $('#formFileCsv')[0];
+			    $(form).find("input[name=type]").val($("#dicType .current").attr("value").toLowerCase());
+			    
 			    var data = new FormData(form);
 			
 			    //모래시계 추가
@@ -480,70 +493,17 @@
 			    $.ajax({
 			        type: "POST",
 			        enctype: 'multipart/form-data',
-			        url: "/dictionaryCsvFileUpload.do",
+			        //url: "/dictionaryCsvFileUpload.do",
+			        url: "http://127.0.0.1:8080/dictionaryCsvFileUpload.do",
 			        data: data,
 			        processData: false, //prevent jQuery from automatically transforming the data into a query string
 			        contentType: false,
 			        cache: false,
 			        //timeout: 600000,
 			        success: function (data) {
-			        	//리턴된 json 문자열을 서버로 보냄 → 일괄등록(일단 파싱먼저)
-			        	debugger;
-			        	//alert("strResult = " + data.strResult);
+			            console.log("SUCCESS");
 			        	
-			        	var strResult = data.strResult;
-			        	var strMessage = data.strMessage;
-			        	var strType = data.strType;
-			        	
-			        	if(strMessage != ""){
-			        		alert(strMessage);
-			        		return false;
-			        	}
-			        	
-			        	
-			        	//삭제 후 추가
-		                //Loading(true);
-		                var param = {
-		                    apiUrl   : JSON.stringify({url : "/dic/del/type",method : "POST"}),
-		                    apiParam : JSON.stringify({type : strType, items : strResult})
-		                };
-
-		                $.ajax({
-		                    url: "/v1/apis",
-		                    //timeout: 20000,
-		                    method: "POST",
-		                    data: param,
-		                    dataType: "json",	//혹시 file 인가
-		                    success: function(data,textStatus,jqXHR){
-		                        //alert("ok " + data.rtmsg);
-		                        OM_ALERT("업로드가 완료되었습니다.");
-		                        
-		                        //모래시계 없애기
-		                        Loading(false);
-		                        
-		                        //새로고침 로직
-		                        $("#cboOrder").val("new").prop("selected",true);//최신순 강제 선택
-		                        loadDictionary();
-		                    },
-		                    error: function(jqXHR,textStatus,errorThrown){
-		                        //failCallback(jqXHR,textStatus,errorThrown);
-
-		                        if ( textStatus == "timeout" ) {
-		                            OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
-		                        } else if (typeof jqXHR.responseText != "undefined" && jqXHR.responseText == "apiSessionError" ) {
-		                            OM_ALERT("세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)", function() {
-		                                location.href = "/";
-		                            })
-		                        } else {
-		                            OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"+textStatus+"<br><br>----------------<br>" +jqXHR.responseText +"<br>----------------");
-		                        }
-
-		                    },
-		                    complete: function() {
-		                        Loading(false);
-		                    }
-
-		                });
+					    Loading(false);
 			        	
 			        	
 			        },
@@ -552,6 +512,7 @@
 			            //$("#result").text(e.responseText);
 			            console.log("ERROR : ", e);
 			            //$("#btnSubmit").prop("disabled", false);
+					    Loading(false);
 
 			        }
 			    });
