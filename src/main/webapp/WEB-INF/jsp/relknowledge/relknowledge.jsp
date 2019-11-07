@@ -114,7 +114,8 @@ $("#btnUp").click(function(event) {
 	$.ajax({
 		type : "POST",
 		enctype : 'multipart/form-data',
-		url : "/relknowledgeCsvFileUpload.do",
+		//url : "/relknowledgeCsvFileUpload.do",
+		url : "http://127.0.0.1:8080/relknowledgeCsvFileUpload.do",
 		data : data,
 		processData : false, //prevent jQuery from automatically transforming the data into a query string
 		contentType : false,
@@ -124,7 +125,10 @@ $("#btnUp").click(function(event) {
 			//리턴된 json 문자열을 서버로 보냄 → 일괄등록(일단 파싱먼저)
 			//debugger;
 			//alert("strResult = " + data.strResult);
-
+			if("1"=="1"){
+				//alert("연관지식 파일 업로드 오케이");
+				return;
+			}
 			var strResult = data.strResult;
 			var strMessage = data.strMessage;
 			var strType = data.strType;
@@ -282,8 +286,8 @@ $("#btnUp").click(function(event) {
 			}
 			
 			if(intErrCount<1){
-				OM_ALERT("ok");
-				Loading(false);
+				OM_ALERT("업로드가 완료되었습니다.");
+				//Loading(false);
 			}
 			
 
@@ -294,8 +298,11 @@ $("#btnUp").click(function(event) {
 			console.log("ERROR : ", e);
 			//$("#btnSubmit").prop("disabled", false);
 
-			Loading(false);
+			//Loading(false);
 
+		},	
+		complete: function() {	
+			Loading(false);
 		}
 	});
 
@@ -325,6 +332,10 @@ $("#btnUp").click(function(event) {
 				if ( OM_API_CKECK(data) == true ) {
 					//successCallback(data,textStatus,jqXHR);
 					
+				    //구버전 : 파일경로 띄우기
+				    //window.open(jqXHR.responseText);
+					
+					//신버전 : 데이터를 그대로 태우기 - 느림
 					var blob = new Blob([jqXHR.responseText], {type: "text/plain"});
 				    objURL = window.URL.createObjectURL(blob);
 				    
@@ -334,7 +345,7 @@ $("#btnUp").click(function(event) {
 				    a.click();				    
 				    
 				} else {
-					Loading(false);
+					//Loading(false);
 				}
 			},
 			error: function(jqXHR,textStatus,errorThrown){
@@ -348,6 +359,11 @@ $("#btnUp").click(function(event) {
 					})
 				} else {
 					//OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"+textStatus+"<br><br>----------------<br>" +jqXHR.responseText +"<br>----------------");
+					
+					//구버전 : 파일경로 띄우기
+				    //window.open(jqXHR.responseText);
+				    
+					//신버전 : 데이터를 그대로 태우기 - 느림
 					var blob = new Blob([jqXHR.responseText], {type: "text/plain"});
 				    objURL = window.URL.createObjectURL(blob);
 				    
@@ -355,7 +371,6 @@ $("#btnUp").click(function(event) {
 				    a.href = objURL;
 				    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
 				    a.click();
-				    
 				    
 				}
 			},	
@@ -375,4 +390,9 @@ $("#btnUp").click(function(event) {
 	 
 	    return yyyy + (mm[1] ? mm : '0'+mm[0]) + (dd[1] ? dd : '0'+dd[0]);
 	}
+	
+	$("#ex_filename").change(function(){
+	    var strFilePath = this.value
+	    $("input.upload_name").val(strFilePath.substring(strFilePath.lastIndexOf("\\")+1,strFilePath.length));
+	});
 </script>
