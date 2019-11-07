@@ -115,7 +115,8 @@ $("#btnUp").click(function(event) {
 		type : "POST",
 		enctype : 'multipart/form-data',
 		//url : "/relknowledgeCsvFileUpload.do",
-		url : "http://127.0.0.1:8080/relknowledgeCsvFileUpload.do",
+		//url : "http://127.0.0.1:8080/relknowledgeCsvFileUpload.do",
+		url : "http://14.63.174.158:8080/relknowledgeCsvFileUpload.do",
 		data : data,
 		processData : false, //prevent jQuery from automatically transforming the data into a query string
 		contentType : false,
