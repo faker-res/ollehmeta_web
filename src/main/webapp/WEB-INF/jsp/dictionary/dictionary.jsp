@@ -419,12 +419,12 @@
         				    //window.open(jqXHR.responseText);
         					
         					//신버전 : 데이터를 그대로 태우기 - 느림
-        					var blob = new Blob([jqXHR.responseText], {type: "text/plain"});
+        					var blob = new Blob(["\ufeff"+jqXHR.responseText], {type: "text/csv;charset=utf-8"});
         				    objURL = window.URL.createObjectURL(blob);
         				    
         				    var a = document.createElement('a');
         				    a.href = objURL;
-        				    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
+        				    a.download = "VOD_RT_" + $("#dicType .current").attr("value").toUpperCase() + ".csv";
         				    a.click();				    
         				    
         				} else {
@@ -447,12 +447,12 @@
         				    //window.open(jqXHR.responseText);
         					
         					//신버전 : 데이터를 그대로 태우기 - 느림
-        					var blob = new Blob([jqXHR.responseText], {type: "text/plain"});
+        					var blob = new Blob(["\ufeff"+jqXHR.responseText], {type: "text/csv;charset=utf-8"});
         				    objURL = window.URL.createObjectURL(blob);
         				    
         				    var a = document.createElement('a');
         				    a.href = objURL;
-        				    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
+        				    a.download = "VOD_RT_" + $("#dicType .current").attr("value").toUpperCase() + ".csv";
         				    a.click();				    
         				    
         				    
