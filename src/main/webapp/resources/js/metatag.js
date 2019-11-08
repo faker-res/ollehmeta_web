@@ -1848,7 +1848,7 @@ function fnAutoCompletePop(obj){
 	var keyword ="";
 	
 	searchKeyword.onkeydown = function(e) {
-		searchKeyword.onkeyup(e);
+		//searchKeyword.onkeyup(e);
 	};
 	
 	/*
