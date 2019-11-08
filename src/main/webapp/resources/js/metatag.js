@@ -1871,14 +1871,32 @@ function fnAutoCompletePop(obj){
 			keyword = searchKeyword.value;
 		//}
 		
+		var koreanCheck = /[0-9|A-Z|a-z|가-힣]/;
+		//debugger;
+			
+		//autokeywordParam
+		var autokeywordParam = function(){
+		    return {
+		        type : "",
+		        KEYWORD : "",
+		        orderby : "abc",
+		        pagesize : 100000,
+		        pageno : 1
+		    };
+		};
+		
 		//비어있다면 div를 안보여주고,
 		if( keyword == ""){
 			autocomplete.style.display = "none";
 		}else if(e.keyCode==13){
 			autocomplete.style.display = "none";
+		}else if(!koreanCheck.test(keyword)){
+			autocomplete.style.display = "none";
 		}else{
 			var tmp = this.parentElement.parentElement.getAttribute("id").substring(4).toLowerCase();
 			if(tmp=="character" || tmp=="emotion" || tmp=="what" || tmp=="when" || tmp=="where" || tmp=="who"){	//상단 6개 카테고리 한정
+				//debugger;
+				/*
 				// 안비어있다면 div를 보여준다.
 				var inputLeft = obj.offsetLeft+
 								obj.parentElement.offsetLeft+
@@ -1894,10 +1912,93 @@ function fnAutoCompletePop(obj){
 				autocomplete.style.top = inputTop + inputHeight + 2;
 				
 				fillSearchResult(autocomplete,obj);
+				*/
+				
+				//2019.11.08 수정 : 조회 결과 div로 표출
+		        var autokeywordParam = autokeywordParam();
+		        
+		        autokeywordParam.type = tmp;
+		        autokeywordParam.pagesize = "10";
+		        autokeywordParam.pageno = "1";
+		        autokeywordParam.KEYWORD = keyword;
+		        
+				
+		        var apiInfo = { url: "/dic/list", method: "GET"}	//아래에도 고정
+		        
+		        var param = {
+		            apiUrl   : JSON.stringify(apiInfo),
+		            apiParam : JSON.stringify(autokeywordParam||{})
+		        };
+		        
+		        //fnLoadDic(tmp,arrParam[i]);
+		        $.ajax({
+		            url: "/v1/apis",
+		            method: "POST",
+		            data: param,
+		            dataType: "json",
+		            async : false,
+		            success: function(data,textStatus,jqXHR){
+		                if ( OM_API_CKECK(data) == true ) {
+		                    $("#list_"+tmp).empty();
+		                    
+		                    $.each(data.RESULT.LIST_WORDS,function(index,item){
+		                    	//console.log("when data " + index + " : " + item);
+		                    	//"list_"+tmp
+		                    	$("#list_"+tmp).append($("<option>").attr("value",item).text(item));
+		                    	$("#txtList_"+tmp).append(item+",");
+		                    });
+		                    
+		                    $("#txtList_"+tmp).val(data.RESULT.LIST_WORDS);
+		                    
+		                    //데이터 없으면 안보임
+		                    if(data.RESULT.LIST_WORDS.length < 1){
+		                    	autocomplete.style.display = "none";
+		                    }
+		                } else {
+		                    Loading(false);
+		                }
+		            },
+		            error: function(jqXHR,textStatus,errorThrown){
+		                console.log("Error");
+
+		                if ( textStatus == "timeout" ) {
+		                    OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
+		                } else if (typeof jqXHR.responseText != "undefined" && jqXHR.responseText == "apiSessionError" ) {
+		                    OM_ALERT("세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)", function() {
+		                        location.href = "/";
+		                    })
+		                } else {
+		                    OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>" +jqXHR.responseText );
+		                }
+
+		            },
+		            complete: function() {
+		                Loading(false);
+		            }
+		        });
+				
+				
+				var inputLeft = obj.offsetLeft+
+					obj.parentElement.offsetLeft+
+					obj.parentElement.parentElement.parentElement.parentElement.offsetLeft;
+				var inputTop  = obj.offsetTop+
+					obj.parentElement.offsetTop+
+					obj.parentElement.parentElement.parentElement.parentElement.offsetTop;
+				var inputHeight = obj.offsetHeight;
+				
+				autocomplete.style.display = "block";
+				autocomplete.style.position = "absolute";
+				autocomplete.style.left= inputLeft;
+				autocomplete.style.top = inputTop + inputHeight + 2;
+				
+				fillSearchResult(autocomplete,obj);
+				
+				
 			}
 		}
 	};
 }
+
 
 function fillSearchResult(autocomplete,obj) {
 	var strResult = "";
@@ -1921,9 +2022,11 @@ function selectData(that,objId) {
 	var searchKeyword;
 	var objSearchKeyword;
 	var tagNewUpdate;
+	
+	
 	if(objId=="updateTag"){
 		searchKeyword = that.parentElement.parentElement.parentElement.parentElement.getElementsByClassName("metaUpdateInput")[0];
-		searchKeyword.value = that.innerText;
+//		searchKeyword.value = that.innerText;
 	}else{
 		objSearchKeyword = document.getElementById(objId);
 		
@@ -1937,7 +2040,7 @@ function selectData(that,objId) {
 			searchKeyword = objSearchKeyword;
 		}
 		
-		searchKeyword.value = that.innerText;
+//		searchKeyword.value = that.innerText;
 		//searchKeyword.value = that.innerText + "　";	//ㄱ 한자 1
 		
 		debugger;
@@ -1947,6 +2050,21 @@ function selectData(that,objId) {
 		$("#"+objId).trigger(enter);
 		*/
 	}
+	
+	//중복검사
+	//if(fnDuplCnt(updateKeyword,thisObject.tagPosition)){
+	//키워드 = that.innerText , 카테고리 = document.getElementById("a8ad0a0b6a3d").getAttribute("data-type") , document.getElementById("7881a5fa29ae").getAttribute("tag-posion") ,
+	var tmpType = document.getElementById(objId).getAttribute("data-type");
+	if(tmpType==null){
+		tmpType = document.getElementById(objId).getAttribute("tag-posion");
+	}
+	if(fnDuplCnt(that.innerText,tmpType)>0){
+    	OM_ALERT("이미 등록되어 있는 키워드입니다.");
+    	return;
+    }
+	
+	
+	searchKeyword.value = that.innerText;
 	
 	var autocomplete = document.getElementById("autocomplete");
 	autocomplete.style.display = "none";

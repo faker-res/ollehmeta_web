@@ -970,6 +970,8 @@
 
     };
     
+    /*
+    //to js
     //autokeywordParam
     var autokeywordParam = function(){
         return {
@@ -980,7 +982,7 @@
             pageno : 1
         };
     };
-    
+    */
 
     var searchExecute = function(searchPageNo){
 
@@ -1084,6 +1086,8 @@
         
     }
     
+    //js로 이동
+    /*
     function fnLoadDic(strType,param){
         $.ajax({
             url: "/v1/apis",
@@ -1126,6 +1130,7 @@
         });
     	
     }
+    */
 </script>
 
 <!-- 미리 읽어와 팝업창의 텍스트상자에 적용 -->
