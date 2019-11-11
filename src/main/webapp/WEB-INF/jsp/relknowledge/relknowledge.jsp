@@ -23,7 +23,7 @@
         .editwrap .tag_add input[type="text"]{width: 134px;margin-right: 6px;margin-top: -1px;border-radius: 20px; border: 3px dotted red;}
         */
     </style>
-    <script src="/js/metatag.js"></script>
+    <!-- <script src="/js/metatag.js"></script> -->
     <script src="/js/relknowledge.js"></script>
 </head>
 <body>
@@ -41,7 +41,7 @@
 					<dl class="selCategory">
 						<dt>카테고리 선택</dt>
 						<dd>
-							<select name="type">
+							<select name="type" id="cboTypeUpload">
 								<option value="">선택된 카테고리가 없습니다.</option>
 								<option value="cook">요리</option>
 								<option value="curr">정치/시사</option>
@@ -87,8 +87,8 @@
 				<dl class="selFile">
 					<dt>파일선택</dt>
 					<dd>
-						<select>
-							<option>현재 데이터</option>
+						<select id="cboFile">
+							<option selected>현재 데이터</option>
 						</select>
 						<button id="btnDown" class="btn_ok">OK</button>
 					</dd>
@@ -99,6 +99,8 @@
 
 </div><!-- //contents -->
 
+<%@ include file="/WEB-INF/jsp/common/ComFooter.jsp" %>
+</body>
 <script>
 
 //dictionary.jsp 의 $(".btnUp").click(function(){}); → $("#fileCsv").change(function(){}); 참고
@@ -107,7 +109,16 @@ $("#btnUp").click(function(event) {
 	
 	var form = $('#formRelFileCsv')[0];
 	var data = new FormData(form);
-
+	
+	if($("#cboTypeUpload > option:selected").val()==""){
+		OM_ALERT("업로드할 항목을 선택해 주십시오");
+		return;
+	}
+	if($("#ex_filename").val()==""){
+		OM_ALERT("선택된 파일이 없습니다.");
+		return;
+	}
+	
 	//모래시계 추가
 	Loading(true);
 
@@ -314,6 +325,10 @@ $("#btnUp").click(function(event) {
 		var type = $("#cboType option:selected").val();
 //		alert("btnDown - type="+type);
 		
+		if(type==""){
+			OM_ALERT("다운드할 항목을 선택해 주십시오");
+			return;
+		}
 		debugger;
 		Loading(true);
 		
@@ -396,4 +411,8 @@ $("#btnUp").click(function(event) {
 	    var strFilePath = this.value
 	    $("input.upload_name").val(strFilePath.substring(strFilePath.lastIndexOf("\\")+1,strFilePath.length));
 	});
+	
+	var yyyymmdd = new Date().yyyymmdd();
+	$("#cboFile").html("<option selected>"+ yyyymmdd.substring(0,4)+"년 "+yyyymmdd.substring(4,6)+"월 "+yyyymmdd.substring(6,8)+"일 0시의 데이터</option>");
+	
 </script>
