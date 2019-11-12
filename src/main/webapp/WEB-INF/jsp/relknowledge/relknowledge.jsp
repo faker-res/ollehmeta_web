@@ -88,7 +88,7 @@
 					<dt>파일선택</dt>
 					<dd>
 						<select id="cboFile">
-							<option selected>현재 데이터</option>
+							<option selected>다운로드할 카테고리를 선택해 주십시오.</option>
 						</select>
 						<button id="btnDown" class="btn_ok">OK</button>
 					</dd>
@@ -111,7 +111,7 @@ $("#btnUp").click(function(event) {
 	var data = new FormData(form);
 	
 	if($("#cboTypeUpload > option:selected").val()==""){
-		OM_ALERT("업로드할 항목을 선택해 주십시오");
+		OM_ALERT("업로드할 카테고리를 선택해 주십시오.");
 		return;
 	}
 	if($("#ex_filename").val()==""){
@@ -131,12 +131,14 @@ $("#btnUp").click(function(event) {
 		data : data,
 		processData : false, //prevent jQuery from automatically transforming the data into a query string
 		contentType : false,
-		cache : false,
+		//cache : false,
+		datatype : "json",
 		timeout: 6000000,
 		success : function(data) {
 			//리턴된 json 문자열을 서버로 보냄 → 일괄등록(일단 파싱먼저)
 			//debugger;
 			//alert("strResult = " + data.strResult);
+			/*
 			if("1"=="1"){
 				//alert("연관지식 파일 업로드 오케이");
 				return;
@@ -301,6 +303,7 @@ $("#btnUp").click(function(event) {
 				OM_ALERT("업로드가 완료되었습니다.");
 				//Loading(false);
 			}
+			*/
 			
 
 		},
@@ -326,7 +329,7 @@ $("#btnUp").click(function(event) {
 //		alert("btnDown - type="+type);
 		
 		if(type==""){
-			OM_ALERT("다운드할 항목을 선택해 주십시오");
+			OM_ALERT("다운로드할 항목을 선택해 주십시오");
 			return;
 		}
 		debugger;
@@ -339,30 +342,24 @@ $("#btnUp").click(function(event) {
 
 		$.ajax({
 			url: "/v1/apis",
-			timeout: 20000,
+			timeout: 200000,
 			method: "POST",
 			data: param,
-			dataType: "json",
+			dataType: "html",
 			success: function(data,textStatus,jqXHR){
 				//alert("result success");
-				if ( OM_API_CKECK(data) == true ) {
-					//successCallback(data,textStatus,jqXHR);
-					
-				    //구버전 : 파일경로 띄우기
-				    //window.open(jqXHR.responseText);
-					
-					//신버전 : 데이터를 그대로 태우기 - 느림
-					var blob = new Blob(["\ufeff"+jqXHR.responseText], {type: "text/csv;charset=utf-8"});
-				    objURL = window.URL.createObjectURL(blob);
-				    
-				    var a = document.createElement('a');
-				    a.href = objURL;
-				    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
-				    a.click();				    
-				    
-				} else {
-					//Loading(false);
-				}
+				
+			    //구버전 : 파일경로 띄우기
+			    //window.open(jqXHR.responseText);
+				
+				//신버전 : 데이터를 그대로 태우기 - 느림
+				var blob = new Blob(["\ufeff"+jqXHR.responseText], {type: "text/csv;charset=utf-8"});
+			    objURL = window.URL.createObjectURL(blob);
+			    
+			    var a = document.createElement('a');
+			    a.href = objURL;
+			    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + ".csv";
+			    a.click();				    
 			},
 			error: function(jqXHR,textStatus,errorThrown){
 				//debugger;
@@ -385,7 +382,7 @@ $("#btnUp").click(function(event) {
 				    
 				    var a = document.createElement('a');
 				    a.href = objURL;
-				    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + "_" + (new Date().yyyymmdd()) + ".csv";
+				    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + ".csv";
 				    a.click();
 				    
 				}
@@ -412,7 +409,27 @@ $("#btnUp").click(function(event) {
 	    $("input.upload_name").val(strFilePath.substring(strFilePath.lastIndexOf("\\")+1,strFilePath.length));
 	});
 	
+	/*
+	//카테고리 선택하면
 	var yyyymmdd = new Date().yyyymmdd();
 	$("#cboFile").html("<option selected>"+ yyyymmdd.substring(0,4)+"년 "+yyyymmdd.substring(4,6)+"월 "+yyyymmdd.substring(6,8)+"일 0시의 데이터</option>");
+	*/
 	
+	$("#cboType").change(function(){
+		var dateToday = new Date();
+		var dateYesterday = new Date();
+		dateYesterday.setDate(dateYesterday.getDate()-1);
+		
+		var yyyymmdd;
+		var batchHour = 10;
+		
+		var dateHour = dateToday.getHours();
+		if(dateHour<batchHour){
+			yyyymmdd = dateYesterday.yyyymmdd();
+		}else{
+			yyyymmdd = dateToday.yyyymmdd();
+		}
+		
+		$("#cboFile").html("<option selected>"+ yyyymmdd.substring(0,4)+"년 "+yyyymmdd.substring(4,6)+"월 "+yyyymmdd.substring(6,8)+"일 "+batchHour+"시의 데이터</option>");
+	});
 </script>

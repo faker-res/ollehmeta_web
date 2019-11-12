@@ -408,28 +408,22 @@
                     timeout: 20000,
                     method: "POST",
                     data: param,
-                    dataType: "json",
+                    dataType: "html",
         			success: function(data,textStatus,jqXHR){
         				//alert("result success");
-        				if ( OM_API_CKECK(data) == true ) {
-        					//successCallback(data,textStatus,jqXHR);
-        					
-        					
-        				    //구버전 : 파일경로 띄우기
-        				    //window.open(jqXHR.responseText);
-        					
-        					//신버전 : 데이터를 그대로 태우기 - 느림
-        					var blob = new Blob(["\ufeff"+jqXHR.responseText], {type: "text/csv;charset=utf-8"});
-        				    objURL = window.URL.createObjectURL(blob);
-        				    
-        				    var a = document.createElement('a');
-        				    a.href = objURL;
-        				    a.download = "VOD_RT_" + $("#dicType .current").attr("value").toUpperCase() + ".csv";
-        				    a.click();				    
-        				    
-        				} else {
-        					//Loading(false);
-        				}
+       					
+       				    //구버전 : 파일경로 띄우기
+       				    //window.open(jqXHR.responseText);
+       					
+       					//신버전 : 데이터를 그대로 태우기 - 느림
+       					var blob = new Blob(["\ufeff"+jqXHR.responseText], {type: "text/csv;charset=utf-8"});
+       				    objURL = window.URL.createObjectURL(blob);
+       				    
+       				    var a = document.createElement('a');
+       				    a.href = objURL;
+       				    a.download = "VOD_RT_" + $("#dicType .current").attr("value").toUpperCase() + ".csv";
+       				    a.click();				    
+       				    
         			},
         			error: function(jqXHR,textStatus,errorThrown){
         				//debugger;
@@ -496,12 +490,13 @@
 			        processData: false, //prevent jQuery from automatically transforming the data into a query string
 			        contentType: false,
 			        cache: false,
+			        datatype : "json",
 			        //timeout: 600000,
 			        success: function (data) {
 			            console.log("SUCCESS");
 			        	
-					    Loading(false);
-			        	
+					    //Loading(false);
+			            OM_ALERT("업로드가 완료되었습니다.");
 			        	
 			        },
 			        error: function (e) {
@@ -509,9 +504,13 @@
 			            //$("#result").text(e.responseText);
 			            console.log("ERROR : ", e);
 			            //$("#btnSubmit").prop("disabled", false);
-					    Loading(false);
+					    //Loading(false);
 
-			        }
+			        },
+        			complete: function() {	
+        				Loading(false);
+        				//OM_ALERT("업로드가 완료되었습니다.");
+        			}	
 			    });
             	
             });

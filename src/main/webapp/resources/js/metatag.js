@@ -1694,6 +1694,11 @@ var MetaTable = function() {
 
 //mcid로 동일 컨텐츠 검색
 function btnMcidSearch(){
+    if ( MetaPopupInstance.isUpdating() ) {
+        OM_ALERT("완료되지 않은 키워드가 있습니다.<br> 작업 완료 후 다시 시도 바랍니다.");
+        return false;
+    }
+    
     OM_API( {url:"/pop/meta/mcidlist", method: "GET"},{
         itemid: MetaPopupInstance.itemId,
         target_type: "FT"	//?
@@ -1731,8 +1736,12 @@ function btnMcidSearch(){
 
 //태그정보 로딩
 function getTagsFromMcidSearchResult(code,stat,cnttag){
+	//편집중인 항목 제거
+	//$("input.metaUpdateInput").remove();
 	
-	OM_API(
+    layerAction('','ly_pop_mcidSearchResult');
+    
+    OM_API(
             APIS.METAS_META,
             {itemid: code},
             function(data){
