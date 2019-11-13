@@ -1926,13 +1926,15 @@ function fnAutoCompletePop(obj){
 				//2019.11.08 수정 : 조회 결과 div로 표출
 		        var autokeywordParam = autokeywordParam();
 		        
+		        keyword = keyword.trim().replace(/ /g,"%20");
+		        
 		        autokeywordParam.type = tmp;
 		        autokeywordParam.pagesize = "10";
 		        autokeywordParam.pageno = "1";
 		        autokeywordParam.KEYWORD = keyword;
 		        
 				
-		        var apiInfo = { url: "/dic/list", method: "GET"}	//아래에도 고정
+		        var apiInfo = { url: "/dic/list10", method: "GET"}	//아래에도 고정
 		        
 		        var param = {
 		            apiUrl   : JSON.stringify(apiInfo),

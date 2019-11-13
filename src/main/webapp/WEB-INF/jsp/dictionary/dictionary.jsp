@@ -472,6 +472,11 @@
             
             //CSV 업로드
             $("#fileCsv").change(function(){
+            	
+            	if($("#fileCsv").val() == ""){
+            		return;
+            	}
+            	
 			    var form = $('#formFileCsv')[0];
 			    $(form).find("input[name=type]").val($("#dicType .current").attr("value").toLowerCase());
 			    

@@ -430,6 +430,8 @@ $("#btnUp").click(function(event) {
 			yyyymmdd = dateToday.yyyymmdd();
 		}
 		
-		$("#cboFile").html("<option selected>"+ yyyymmdd.substring(0,4)+"년 "+yyyymmdd.substring(4,6)+"월 "+yyyymmdd.substring(6,8)+"일 "+batchHour+"시의 데이터</option>");
+		//$("#cboFile").html("<option selected>"+ yyyymmdd.substring(0,4)+"년 "+yyyymmdd.substring(4,6)+"월 "+yyyymmdd.substring(6,8)+"일 "+batchHour+"시의 데이터</option>");
+		//$("#cboFile").html("<option selected>VOD_RT_"+this.value.toUpperCase()+".csv</option>");
+		$("#cboFile").html("<option selected>VOD_RT_"+this.value.toUpperCase()+"_"+yyyymmdd+".csv</option>");
 	});
 </script>

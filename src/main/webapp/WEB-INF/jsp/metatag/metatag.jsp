@@ -303,9 +303,9 @@
                 <div id="lypop_tab1" class="act-tabCn on">
                     <div class="editwrap">
                         <div class="remarks" style="">
-                            <div><span class="bgc_1"></span>중복 추출 태그</div>
-                            <div><span class="bgc_2"></span>기존 한정 태그</div>
-                            <div><span class="bgc_3"></span>신규 추출 태그</div>
+                            <div><span class="bgc_1"></span>자동 추출 태그</div>
+                            <div><span class="bgc_4"></span>사전 등록 태그</div>
+                            <div><span class="bgc_3"></span>신규 등록 태그</div>
                         </div>
                         <dl>
                             <dt>시간적 배경</dt>

@@ -51,16 +51,16 @@
                 <% if ( isAdmin )  { %>
                 <li class="<%=( reqURI.indexOf("/admin") >-1 ) ? "current" : "" %>">
                     <a href="/admin/dataview.do">관리기능</a>
+                    <% if ( isSuperAdmin )  { %>
                     <div class="submenu">
                         <span class="ic"></span>
-                        <% if ( isSuperAdmin )  { %>
                         <a class="<%=( reqURI.indexOf("dataview.do") >-1 ) ? "current" : "" %>" href="/admin/dataview.do">통계조회</a>
-                        <% }%>
-                        <a class="<%=( reqURI.indexOf("admin.do") >-1 ) ? "current" : "" %>" href="/admin/admin.do">권한관리</a>
+                        <%--<a class="<%=( reqURI.indexOf("admin.do") >-1 ) ? "current" : "" %>" href="/admin/admin.do">권한관리</a>--%>
                     </div>
+                    <% }%>
                 </li>
                 <% } %>
-                <li class="<%=( reqURI.indexOf("//relknowledge.do") >-1 ) ? "current" : "" %>"><a href="/relknowledge.do">연관지식</a></li>
+                <li class="<%=( reqURI.indexOf("/relknowledge.do") >-1 ) ? "current" : "" %>"><a href="/relknowledge.do">연관지식</a></li>
             </ul>
         </nav>
         <div class="user">
