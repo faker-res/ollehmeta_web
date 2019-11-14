@@ -60,7 +60,7 @@ select{height: 32px;min-width: 80px;padding: 0 12px;border: 1px solid #383d44;}
 .gnb{height: 84px;margin-bottom: 30px;border-bottom: 2px solid #000;background: #383d44;}
 .gnb .inner{position: relative;width: 1220px;margin: 0 auto;}
 .gnb h1 a{display: block;width: 260px;height: 82px;background: url(/resources/images/img/logo_gnb.png) no-repeat;text-indent: -9999px;}
-.gnb nav{position: absolute;top: 0;left: 415px;}
+.gnb nav{position: absolute;top: 0;left: 307px;}
 .gnb nav ul:after{content: '';display: block;clear: both;}
 .gnb nav ul li{position: relative;float: left;}
 .gnb nav ul li > a{display: inline-block;height: 82px;line-height: 80px;padding: 0 22px;color: #b0b7c2;font-size: 16px;text-decoration: none;transition: .2s;}

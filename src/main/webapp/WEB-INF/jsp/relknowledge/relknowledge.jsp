@@ -109,13 +109,20 @@ $("#btnUp").click(function(event) {
 	
 	var form = $('#formRelFileCsv')[0];
 	var data = new FormData(form);
+	var tmpFileName = $("#ex_filename").val();
 	
 	if($("#cboTypeUpload > option:selected").val()==""){
 		OM_ALERT("업로드할 카테고리를 선택해 주십시오.");
 		return;
 	}
+	
 	if($("#ex_filename").val()==""){
 		OM_ALERT("선택된 파일이 없습니다.");
+		return;
+	}
+	
+	if(tmpFileName.substring(tmpFileName.indexOf(".csv"),tmpFileName.length) != ".csv"){
+		OM_ALERT("CSV 파일을 선택해주십시오.");
 		return;
 	}
 	
@@ -123,6 +130,7 @@ $("#btnUp").click(function(event) {
 	Loading(true);
 
 	$.ajax({
+		crossOrigin : true,
 		type : "POST",
 		enctype : 'multipart/form-data',
 		//url : "/relknowledgeCsvFileUpload.do",
@@ -348,6 +356,7 @@ $("#btnUp").click(function(event) {
 			dataType: "html",
 			success: function(data,textStatus,jqXHR){
 				//alert("result success");
+				OM_ALERT("다운로드가 완료되었습니다.");
 				
 			    //구버전 : 파일경로 띄우기
 			    //window.open(jqXHR.responseText);

@@ -411,6 +411,7 @@
                     dataType: "html",
         			success: function(data,textStatus,jqXHR){
         				//alert("result success");
+        				OM_ALERT("다운로드가 완료되었습니다.");
        					
        				    //구버전 : 파일경로 띄우기
        				    //window.open(jqXHR.responseText);
@@ -421,7 +422,7 @@
        				    
        				    var a = document.createElement('a');
        				    a.href = objURL;
-       				    a.download = "VOD_RT_" + $("#dicType .current").attr("value").toUpperCase() + ".csv";
+       				    a.download = "DIC_KEYWORDS_" + $("#dicType .current").attr("value").toUpperCase() + ".csv";
        				    a.click();				    
        				    
         			},
@@ -446,7 +447,7 @@
         				    
         				    var a = document.createElement('a');
         				    a.href = objURL;
-        				    a.download = "VOD_RT_" + $("#dicType .current").attr("value").toUpperCase() + ".csv";
+        				    a.download = "DIC_KEYWORDS_" + $("#dicType .current").attr("value").toUpperCase() + ".csv";
         				    a.click();				    
         				    
         				    
@@ -472,10 +473,17 @@
             
             //CSV 업로드
             $("#fileCsv").change(function(){
+            	var tmpFileName = $("#fileCsv").val();
             	
-            	if($("#fileCsv").val() == ""){
+            	if(tmpFileName == ""){
             		return;
             	}
+            	
+            	if(tmpFileName.substring(tmpFileName.indexOf(".csv"),tmpFileName.length) != ".csv"){
+            		OM_ALERT("CSV 파일을 선택해주십시오.");
+            		return;
+            	}
+            	
             	
 			    var form = $('#formFileCsv')[0];
 			    $(form).find("input[name=type]").val($("#dicType .current").attr("value").toLowerCase());
@@ -486,6 +494,7 @@
 			    Loading(true);
 			    
 			    $.ajax({
+			    	crossOrigin : true,
 			        type: "POST",
 			        enctype: 'multipart/form-data',
 			        //url: "/dictionaryCsvFileUpload.do",

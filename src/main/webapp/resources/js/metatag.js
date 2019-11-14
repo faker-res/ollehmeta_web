@@ -923,11 +923,20 @@ var MetaPopup = function() {
                             items : JSON.stringify(metaHistory),
                             userId : userId		//로그인 중인 사용자정보 저장
                         },function(response){
-                        	//불용어사전 등록
-                        	var strNotuse = $("#txtNotuse").val();
+                        	var strNotuse = $("#txtNotuse").val();	//불용어사전
+                        	
+                        	//(승인 기존 로직)
+                            //alert("API 수정 요청")
+                            metaLayerAction();
+                            MetaHistoryManager.reset();
+                            OM_ALERT("승인 완료 했습니다.");
+                            
+                            var pageNo = $(".pagenation .current").attr("value");
+                            searchExecute(pageNo);
+                            
+                            
+                            //처리할 불용어 사전 등록 내역이 있으면 승인 추가 진행
                         	if(strNotuse!=""){
-                        		debugger;
-                        		
                         		$("#txtNotuse").val("");
                         		
                         		var arrStrNotuse = strNotuse.split("////////");
@@ -942,8 +951,6 @@ var MetaPopup = function() {
 	                            		target_type: "NOTUSE",
 	                            		target_word: arrStrNotuse[i].split("////")[0],
 	                            		action: "add"
-	                            		//,
-                            			//original_type: arrStrNotuse[i].split("////")[1]
 	                            	};
 	                        		itemMetaDelHistory = {
 	                            		word:arrStrNotuse[i].split("////")[0],
@@ -957,41 +964,32 @@ var MetaPopup = function() {
 	                        	}
 	                        	
 	                        	//1. 불용어사전 등록
+	                        	debugger;
 	                            OM_API(
 	                                APIS.DIC_UPT_ARRAY, {		///dic/upt/array
 	                                    items: JSON.stringify(metaHistory)
 	                                }, function(data){
 	                                    //OM_ALERT("불용어사전에 등록되었습니다.");
 	                                }, function(){
-	                                    console.log("Error")
+	                                    console.log("Error - adding on notuse")
 	                                }
 	                            );
 	                            
 	                            //2. 메타사전에서 삭제
+	                        	debugger;
 	                            OM_API(
 	                                APIS.DIC_UPT_ARRAY, {		///dic/upt/array
 	                                    items: JSON.stringify(metaDelHistory)
 	                                }, function(data){
 	                                    //OM_ALERT("불용어사전에 등록되었습니다.");
 	                                }, function(){
-	                                    console.log("Error")
+	                                    console.log("Error - delete from dicKeywords")
 	                                }
 	                            );
+	                            
+	                            //OM_ALERT("승인 완료 했습니다.");
+	                            
                         	}
-                        	
-                        	//(승인 기존 로직)
-                            //alert("API 수정 요청")
-                            metaLayerAction();
-                            MetaHistoryManager.reset();
-                            /*
-                            OM_ALERT("승인 완료 했습니다.");
-                            var pageNo = $(".pagenation .current").attr("value");
-                            searchExecute(pageNo);
-							*/
-                            OM_ALERT("승인 완료 했습니다.",function(){
-                                var pageNo = $(".pagenation .current").attr("value");
-                                searchExecute(pageNo);
-                            });
                         },function(){
                             console.log("Ajax ResponseError");
                         });
@@ -1014,6 +1012,9 @@ var MetaPopup = function() {
                             ,
                             userId : userId		//로그인 중인 사용자정보 저장
                         },function(response){
+                        	var strNotuse = $("#txtNotuse").val();	//불용어사전
+
+                        	//(승인 기존 로직)
                             //alert("API 수정 요청")
                             metaLayerAction();
                             OM_ALERT("즉시 승인 완료 했습니다.");
@@ -1021,6 +1022,63 @@ var MetaPopup = function() {
 
                             var pageNo = $(".pagenation .current").attr("value");
                             searchExecute(pageNo);
+                            
+                            
+                            //처리할 불용어 사전 등록 내역이 있으면 승인 추가 진행
+                        	if(strNotuse!=""){
+                        		$("#txtNotuse").val("");
+                        		
+                        		var arrStrNotuse = strNotuse.split("////////");
+	                        	var metaHistory = [];
+	                        	var metaDelHistory = [];
+	                        	var itemMetaHistory = {};
+	                        	var itemMetaDelHistory = {};
+	                        	
+	                        	for(var i in arrStrNotuse){
+	                        		itemMetaHistory = {
+	                            		word:arrStrNotuse[i].split("////")[0],
+	                            		target_type: "NOTUSE",
+	                            		target_word: arrStrNotuse[i].split("////")[0],
+	                            		action: "add"
+	                            	};
+	                        		itemMetaDelHistory = {
+	                            		word:arrStrNotuse[i].split("////")[0],
+	                            		target_type: arrStrNotuse[i].split("////")[1],
+	                            		target_word: arrStrNotuse[i].split("////")[0],
+	                            		action: "del"
+	                        		}
+	                        		
+	                        		metaHistory[i] = itemMetaHistory;
+	                        		metaDelHistory[i] = itemMetaDelHistory;
+	                        	}
+	                        	
+	                        	//1. 불용어사전 등록
+	                        	debugger;
+	                            OM_API(
+	                                APIS.DIC_UPT_ARRAY, {		///dic/upt/array
+	                                    items: JSON.stringify(metaHistory)
+	                                }, function(data){
+	                                    //OM_ALERT("불용어사전에 등록되었습니다.");
+	                                }, function(){
+	                                    console.log("Error - adding on notuse")
+	                                }
+	                            );
+	                            
+	                            //2. 메타사전에서 삭제
+	                        	debugger;
+	                            OM_API(
+	                                APIS.DIC_UPT_ARRAY, {		///dic/upt/array
+	                                    items: JSON.stringify(metaDelHistory)
+	                                }, function(data){
+	                                    //OM_ALERT("불용어사전에 등록되었습니다.");
+	                                }, function(){
+	                                    console.log("Error - delete from dicKeywords")
+	                                }
+	                            );
+	                            
+	                            //OM_ALERT("승인 완료 했습니다.");
+	                            
+                        	}
 
                         },function(){
                             console.log("Ajax ResponseError");
