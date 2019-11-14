@@ -367,7 +367,8 @@ $("#btnUp").click(function(event) {
 			    
 			    var a = document.createElement('a');
 			    a.href = objURL;
-			    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + ".csv";
+			    //a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + ".csv";
+			    a.download = $("#cboFile > option:selected").val();
 			    a.click();				    
 			},
 			error: function(jqXHR,textStatus,errorThrown){
@@ -391,7 +392,8 @@ $("#btnUp").click(function(event) {
 				    
 				    var a = document.createElement('a');
 				    a.href = objURL;
-				    a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + ".csv";
+				    //a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + ".csv";
+				    a.download = $("#cboFile > option:selected").val();
 				    a.click();
 				    
 				}
