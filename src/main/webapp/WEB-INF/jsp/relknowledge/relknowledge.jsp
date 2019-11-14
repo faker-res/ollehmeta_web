@@ -242,6 +242,12 @@ $("#btnUp").click(function(event) {
 	
 	$("#ex_filename").change(function(){
 	    var strFilePath = this.value
+	    
+		if(strFilePath.substring(strFilePath.indexOf(".csv"),strFilePath.length) != ".csv"){
+			OM_ALERT("CSV 파일을 선택해주십시오.s");
+			return;
+		}
+	    
 	    $("input.upload_name").val(strFilePath.substring(strFilePath.lastIndexOf("\\")+1,strFilePath.length));
 	});
 	
