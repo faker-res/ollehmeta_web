@@ -162,7 +162,7 @@ $("#btnUp").click(function(event) {
 //		alert("btnDown - type="+type);
 		
 		if(type==""){
-			OM_ALERT("다운로드할 항목을 선택해 주십시오");
+			OM_ALERT("다운로드할 카테고리를 선택해 주십시오.");
 			return;
 		}
 		debugger;
@@ -244,7 +244,7 @@ $("#btnUp").click(function(event) {
 	    var strFilePath = this.value
 	    
 		if(strFilePath.substring(strFilePath.indexOf(".csv"),strFilePath.length) != ".csv"){
-			OM_ALERT("CSV 파일을 선택해주십시오.s");
+			OM_ALERT("CSV 파일을 선택해주십시오.");
 			return;
 		}
 	    
@@ -258,6 +258,10 @@ $("#btnUp").click(function(event) {
 	*/
 	
 	$("#cboType").change(function(){
+		if(this.value==""){
+			$("#cboFile").html("<option selected>다운로드할 카테고리를 선택해 주십시오.</option>");
+			return;
+		}
 		var dateToday = new Date();
 		var dateYesterday = new Date();
 		dateYesterday.setDate(dateYesterday.getDate()-1);
