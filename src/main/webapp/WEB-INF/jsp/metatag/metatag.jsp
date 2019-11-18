@@ -233,7 +233,7 @@
             <thead>
                 <th class="dv"><input type="checkbox"></th>
                 <th>제목</th>
-                <th>CID&SID</th>
+                <th>MCID&SID</th>
                 <th class="dv">분류</th>
                 <th>태깅차수</th>
                 <th>태거ID</th>

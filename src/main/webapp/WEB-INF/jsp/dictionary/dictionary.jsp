@@ -294,19 +294,33 @@
                     OM_ALERT("수정할 내용이 없습니다.");
                     return;
                 }
+                
+			    //모래시계 추가(2019.11.15)
+			    //Loading(true);
+                
                 OM_API(
                         APIS.DIC_UPT_ARRAY, {
                             items: JSON.stringify(metaHistory)
                         }, function(data){
 
-                            OM_ALERT("저장되었습니다.");
-
                             var currentPageNum = $(".pagenation .current").html();
 
-                            loadDictionary(currentPageNum);
+                            //2019.11.15 수정
+                            //loadDictionary(currentPageNum);
+                            loadDictionary(currentPageNum,"",function(){
+                			    //모래시계 해제(2019.11.15)
+                			    //Loading(false);
+
+                                OM_ALERT("저장되었습니다.");
+                            });
                             MetaHistoryManager.reset();
+                            
+                            
                         }, function(){
                             console.log("Error")
+                            
+            			    //모래시계 해제(2019.11.15)
+            			    //Loading(false);
                         });
 
             });
@@ -498,8 +512,8 @@
 			        type: "POST",
 			        enctype: 'multipart/form-data',
 			        //url: "/dictionaryCsvFileUpload.do",
-			        //url: "http://127.0.0.1:8080/dictionaryCsvFileUpload.do",
-			        url: "http://14.63.174.158:8080/dictionaryCsvFileUpload.do",
+			        url: "http://127.0.0.1:8080/dictionaryCsvFileUpload.do",
+			        //url: "http://14.63.174.158:8080/dictionaryCsvFileUpload.do",
 			        data: data,
 			        processData: false, //prevent jQuery from automatically transforming the data into a query string
 			        contentType: false,
@@ -532,7 +546,7 @@
 
         });
 
-        function loadDictionary(pageNextNo, searchWord) {
+        function loadDictionary(pageNextNo, searchWord, fnCallback) {
 
             MetaHistoryManager.reset();
 
@@ -587,6 +601,11 @@
                         $("#dic_tab3 .txtTag").html(currentTabName);
                         $("#dic_tab4 .txtTag").html(currentTabName);
                         $("#dic_tab5 .txtTag").html(currentTabName);
+                        
+                        //2019.11.15 - 콜백 함수 있으면 실행 (가령 완료 메시지라던가)
+                        if( typeof fnCallback != "undefined" ) {
+                        	fnCallback();
+                        }
 
                     }, function(){
                         console.log("Error")
