@@ -181,7 +181,7 @@
             </colgroup>
             <thead>
             <th>제목</th>
-            <th>CID&SID</th>
+            <th>MCID&SID</th>
             <th class="dv">분류</th>
             <th>태깅차수</th>
             <th>입수일자</th>

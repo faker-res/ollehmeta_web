@@ -187,13 +187,15 @@ $("#btnUp").click(function(event) {
 			    //window.open(jqXHR.responseText);
 				
 				//신버전 : 데이터를 그대로 태우기 - 느림
-				var blob = new Blob(["\ufeff"+jqXHR.responseText], {type: "text/csv;charset=utf-8"});
+				var responseTextArr = jqXHR.responseText.split("::::");
+				var blob = new Blob(["\ufeff"+responseTextArr[1]], {type: "text/csv;charset=utf-8"});
 			    objURL = window.URL.createObjectURL(blob);
 			    
 			    var a = document.createElement('a');
 			    a.href = objURL;
 			    //a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + ".csv";
-			    a.download = $("#cboFile > option:selected").val();
+			    //a.download = $("#cboFile > option:selected").val();
+			    a.download = responseTextArr[0];
 			    a.click();				    
 			},
 			error: function(jqXHR,textStatus,errorThrown){

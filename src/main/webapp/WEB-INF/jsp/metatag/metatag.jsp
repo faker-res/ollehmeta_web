@@ -1162,7 +1162,7 @@
 				</colgroup>
 				<thead>
 					<tr>
-						<th>CID&amp;SID</th>
+						<th>MCID&amp;SID</th>
 						<th>제목</th>
 					</tr>
 				</thead>
