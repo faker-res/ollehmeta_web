@@ -455,7 +455,7 @@
                             </dd>
                         </dl>
                         <dl>
-                            <dt>추천표헌</dt>
+                            <dt>추천표현</dt>
                             <dd id="listRecoTarget">
 								<span class="tag_add">
 									<a href="#" class="btn_add">추가</a>
