@@ -30,11 +30,6 @@ public class RelKnowledgeController extends CommonController {
     {
         logger.debug( "## relknowledge " ) ;
         Map<String, String> paramMap = new HashMap<String, String>();
-        String searchType = request.getParameter("searchType");
-        if ( searchType == null ) {
-            searchType = "ALL";
-        }
-        paramMap.put("searcyType", searchType);
 
         ModelAndView mav = new ModelAndView("relknowledge/relknowledge", paramMap);
         return mav;

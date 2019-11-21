@@ -264,22 +264,39 @@ $("#btnUp").click(function(event) {
 			$("#cboFile").html("<option selected>다운로드할 카테고리를 선택해 주십시오.</option>");
 			return;
 		}
-		var dateToday = new Date();
-		var dateYesterday = new Date();
-		dateYesterday.setDate(dateYesterday.getDate()-1);
-		
-		var yyyymmdd;
-		var batchHour = 10;
-		
-		var dateHour = dateToday.getHours();
-		if(dateHour<batchHour){
-			yyyymmdd = dateYesterday.yyyymmdd();
-		}else{
-			yyyymmdd = dateToday.yyyymmdd();
-		}
-		
-		//$("#cboFile").html("<option selected>"+ yyyymmdd.substring(0,4)+"년 "+yyyymmdd.substring(4,6)+"월 "+yyyymmdd.substring(6,8)+"일 "+batchHour+"시의 데이터</option>");
-		//$("#cboFile").html("<option selected>VOD_RT_"+this.value.toUpperCase()+".csv</option>");
-		$("#cboFile").html("<option selected>VOD_RT_"+this.value.toUpperCase()+"_"+yyyymmdd+".csv</option>");
+		var param = {	
+			apiUrl   : JSON.stringify({url : "/relknowledge/getCsvFileName.do",method : "GET"}),
+			apiParam : JSON.stringify({type : this.value}||{})
+		};
+
+		$.ajax({
+			url: "/v1/apis",
+			timeout: 200000,
+			method: "POST",
+			data: param,
+			dataType: "json",
+			success: function(data,textStatus,jqXHR){
+				//alert("result success");
+				//$("#cboFile").html("<option selected>"+data.CSV_FILE_NAME+"</option>");
+				$("#cboFile").empty();
+				
+                $.each(data.RESULT.CSV_FILE_NAME,function(index,item){
+                	//console.log("when data " + index + " : " + item);
+                	//"list_"+tmp
+                	//$("#list_"+tmp).append($("<option>").attr("value",item).text(item));
+                	//$("#txtList_"+tmp).append(item+",");
+                	if(item!=""){
+                		$("#cboFile").append($("<option>").attr("value",item).text(item));
+                	}
+                });
+			},
+			error: function(jqXHR,textStatus,errorThrown){
+				//debugger;
+				//alert("result error");
+				if ( textStatus == "timeout" ) {
+					OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
+				}
+			}
+		});
 	});
 </script>

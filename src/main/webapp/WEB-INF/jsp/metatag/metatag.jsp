@@ -459,7 +459,7 @@
                             <dd id="listRecoTarget">
 								<span class="tag_add">
 									<a href="#" class="btn_add">추가</a>
-                                    <a href="#" class="btn_del">삭제</a><!-- 2018-04-06 추가 -->
+                                    <a href="#" class="btn_del removeAll">삭제</a><!-- 2018-04-06 추가 -->
 								</span>
                             </dd>
                         </dl>
