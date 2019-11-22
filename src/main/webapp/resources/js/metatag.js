@@ -202,6 +202,7 @@ var MetaTag = function() {
             
             $("#"+thisObject.tagId).find("#updateTag").attr("data-id",thisObject.tagId);
             $("#"+thisObject.tagId).find("#updateTag").attr("data-original",thisObject.tagName);
+            $("#"+thisObject.tagId).find("#updateTag").val(thisObject.tagName);
 
             thisObject.editMode = true; // 수정 모드
 
@@ -473,10 +474,14 @@ function addMetaKeyword(data, parentTag, fnGetData, bAppend) {
         } else {
             $("#"+ parentTag + " .tag").remove();
         }
-
-        data.forEach(function(v, i){
-            (new MetaTag()).init(fnGetData(v, parentTag)).add()
-        })
+        
+        if(data != null){
+	        data.forEach(function(v, i){
+	            (new MetaTag()).init(fnGetData(v, parentTag)).add()
+	        })
+        }else{
+        	
+        }
     }
 }
 
