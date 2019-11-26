@@ -335,7 +335,7 @@
 
 
             function addTag(){
-            	var keyword = $("#tagInsertName").val().replace(/\s/,"%20");	//빈칸이 섞인 경우 검색 안되는 현상
+            	var keyword = $("#tagInsertName").val().replace(/\s/gi,"%20");	//빈칸이 섞인 경우 검색 안되는 현상
             	
             	//2019.11.26 중복검사
 			    OM_API( {url:"/dic/check/dupl", method: "GET"},{
