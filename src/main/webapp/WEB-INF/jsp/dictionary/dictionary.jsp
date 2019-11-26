@@ -335,30 +335,44 @@
 
 
             function addTag(){
-
-                var tagPosion =  $("#dicType .current").attr("value");
-                MetaHistoryManager.add($("#tagInsertName").val(),
-                        tagPosion,
-                        $("#tagInsertName").val(),
-                        "add");
-
-                var tagName = $("#tagInsertName").val();
-                metaDictionary.addTag(tagName, "dic_new");
-                var metaTag = new MetaTag()
-                metaTag.init({
-                    parentDom : "addMetaTag",
-                    tagName: tagName,
-                    tagRatio: 0,
-                    tagType: "dic_new",
-                    tagGroup: "DIC",
-                    onDataChangeEvent: metaDictionary.onDataChangeEvent,
-                    enableRatio: false,
-                    enableMenu: false,
-                    enableDelete: false,
-                    enableAllEvent: false
-                }).add();
-
-                $("#tagInsertName").val("");
+            	
+            	//2019.11.26 중복검사
+			    OM_API( {url:"/dic/check/dupl", method: "GET"},{
+			        keyword: $("#tagInsertName").val(),
+			        type:$("#dicType .current").attr("value").toLowerCase()
+			    },function(data){
+			    	
+			        if ( JSON.parse(data).CNT>0 ) {
+			        	OM_ALERT("이미 등록된 키워드입니다.");
+		                $("#tagInsertName").val("");
+			        	return;
+			        }else{
+			        	//기존로직
+		                var tagPosion =  $("#dicType .current").attr("value");
+		                MetaHistoryManager.add($("#tagInsertName").val(),
+		                        tagPosion,
+		                        $("#tagInsertName").val(),
+		                        "add");
+		
+		                var tagName = $("#tagInsertName").val();
+		                metaDictionary.addTag(tagName, "dic_new");
+		                var metaTag = new MetaTag()
+		                metaTag.init({
+		                    parentDom : "addMetaTag",
+		                    tagName: tagName,
+		                    tagRatio: 0,
+		                    tagType: "dic_new",
+		                    tagGroup: "DIC",
+		                    onDataChangeEvent: metaDictionary.onDataChangeEvent,
+		                    enableRatio: false,
+		                    enableMenu: false,
+		                    enableDelete: false,
+		                    enableAllEvent: false
+		                }).add();
+		
+		                $("#tagInsertName").val("");
+			        }
+			    });
             }
             $("#tagInsert").click(function(){
                 addTag();
@@ -531,7 +545,7 @@
 							OM_ALERT("업로드가 완료되었습니다.");
 						}else{
 				            console.log("ERROR");
-							OM_ALERT("에러");
+							OM_ALERT("올바른 CSV파일을 선택해주십시오.");
 						}
 					},
 			        error: function (e) {
