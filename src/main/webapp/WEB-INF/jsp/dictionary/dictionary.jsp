@@ -335,6 +335,7 @@
 
 
             function addTag(){
+            	var keyword = keyword.replace(/\s/,"%20");	//빈칸이 섞인 경우 검색 안되는 현상
             	
             	//2019.11.26 중복검사
 			    OM_API( {url:"/dic/check/dupl", method: "GET"},{
