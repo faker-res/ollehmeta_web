@@ -342,7 +342,7 @@
 			        type:$("#dicType .current").attr("value").toLowerCase()
 			    },function(data){
 			    	
-			        if ( JSON.parse(data).CNT>0 ) {
+			        if ( data.RT_CNT ) {
 			        	OM_ALERT("이미 등록된 키워드입니다.");
 		                $("#tagInsertName").val("");
 			        	return;
