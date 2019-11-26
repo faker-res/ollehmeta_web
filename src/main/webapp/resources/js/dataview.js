@@ -35,7 +35,8 @@ var DataViewTable = function() {
             "FA" : "추출실패",
             "FT" : "승인불가",
             "RT" : "승인대기",
-            "ST" : "태깅완료"
+            "ST" : "태깅완료",
+            "Y"  : "수집대기"	//2019.11.25
         };
 
         $(data.RESULT.LIST_ITEMS).each(function(k,item) {

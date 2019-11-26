@@ -1,6 +1,8 @@
 package egovframework.daisyinsight.olleh.web;
 
 import egovframework.daisyinsight.common.base.CommonController;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,11 +21,15 @@ public class DictionaryController extends CommonController {
     final String seperator = "\t";
     final String lineFeed = System.getProperty("line.separator");
     
+    @Value("#{config['olleh.meta.url']}")
+    private String apiUrl;
+    
     @RequestMapping(value = "/dictionary.do")
     public ModelAndView biWebMain(HttpServletRequest request ) throws Exception
     {
         logger.debug( "## dictionary " ) ;
         ModelAndView mav = new ModelAndView("dictionary/dictionary");
+        mav.addObject("BASE_URL", apiUrl);
         return mav;
     }
     

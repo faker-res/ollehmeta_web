@@ -1,6 +1,8 @@
 package egovframework.daisyinsight.olleh.web;
 
 import egovframework.daisyinsight.common.base.CommonController;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +27,9 @@ public class RelKnowledgeController extends CommonController {
     final String seperator = "\t";
     final String lineFeed = System.getProperty("line.separator");
     
+    @Value("#{config['olleh.meta.url']}")
+    private String apiUrl;
+    
     @RequestMapping(value = "/relknowledge.do")
     public ModelAndView biWebMain(HttpServletRequest request ) throws Exception
     {
@@ -32,6 +37,7 @@ public class RelKnowledgeController extends CommonController {
         Map<String, String> paramMap = new HashMap<String, String>();
 
         ModelAndView mav = new ModelAndView("relknowledge/relknowledge", paramMap);
+        mav.addObject("BASE_URL", apiUrl);
         return mav;
     }
     

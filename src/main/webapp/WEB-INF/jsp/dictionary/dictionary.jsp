@@ -515,7 +515,8 @@
 			        enctype: 'multipart/form-data',
 			        //url: "/dictionaryCsvFileUpload.do",
 			        //url: "http://127.0.0.1:8080/dictionaryCsvFileUpload.do",
-			        url: "http://14.63.174.158:8080/dictionaryCsvFileUpload.do",
+			        //url: "http://14.63.174.158:8080/dictionaryCsvFileUpload.do",
+			        url : "${BASE_URL}/relknowledgeCsvFileUpload.do",
 			        data: data,
 			        processData: false, //prevent jQuery from automatically transforming the data into a query string
 			        contentType: false,
@@ -523,12 +524,16 @@
 			        datatype : "json",
 			        //timeout: 600000,
 			        success: function (data) {
-			            console.log("SUCCESS");
-			        	
-					    //Loading(false);
-			            OM_ALERT("업로드가 완료되었습니다.");
-			        	
-			        },
+			            //console.log("SUCCESS");
+						//OM_ALERT("업로드가 완료되었습니다.");
+						if(JSON.parse(data).RT_CODE>0){
+				            console.log("SUCCESS");
+							OM_ALERT("업로드가 완료되었습니다.");
+						}else{
+				            console.log("ERROR");
+							OM_ALERT("에러");
+						}
+					},
 			        error: function (e) {
 
 			            //$("#result").text(e.responseText);
