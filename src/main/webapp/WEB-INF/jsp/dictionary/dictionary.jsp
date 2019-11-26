@@ -531,7 +531,7 @@
 							OM_ALERT("업로드가 완료되었습니다.");
 						}else{
 				            console.log("ERROR");
-							OM_ALERT("에러");
+							OM_ALERT("올바른 CSV파일을 선택해주십시오.");
 						}
 					},
 			        error: function (e) {
