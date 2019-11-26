@@ -372,6 +372,8 @@
 		
 		                $("#tagInsertName").val("");
 			        }
+			    },function(jqXHR,textStatus,errorThrown){
+			    	OM_ALERT(errorThrown);
 			    });
             }
             $("#tagInsert").click(function(){
