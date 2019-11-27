@@ -1388,11 +1388,17 @@ var MetaTable = function() {
 
             //테스트 코드
             //item.ITEMID = 10410;
+        	
+        	//2019.11.27 자릿수 맞추기
+        	var strDumCode = "";
+        	if(item.CID.length == 10){
+        		strDumCode = "0001";
+        	}
 
             var html = "<tr>\
                         <td class='dv'><input type='checkbox' value=" + item.ITEMID + "></td>\
                         <td class='left'>" + item.TITLE + "</td>\
-                        <td>" + item.CID + "</td>\
+                        <td>" + item.CID + strDumCode + "</td>\
                         <td class='dv'>" + SEARCH_TYPE[item.TYPE] + "</td>\
                         <td>" + item.CNT_TAG + "</td>\
                         <td>" + item.REGID + "</td>\
