@@ -48,7 +48,7 @@
                 <li class="<%=( reqURI.indexOf("/metatag") >-1 ) ? "current" : "" %>"><a href="/metatag.do">메타태깅</a></li>
                 <li class="<%=( reqURI.indexOf("/dictionary") >-1 ) ? "current" : "" %>"><a href="/dictionary.do">사전관리</a></li>
                 <li class="<%=( reqURI.indexOf("/social") >-1 ) ? "current" : "" %>"><a href="/social.do">소셜분석</a></li>
-                <% if ( isAdmin )  { %>
+                <% if ( isAdmin && !isAdmin )  { %>
                 <li class="<%=( reqURI.indexOf("/admin") >-1 ) ? "current" : "" %>">
                     <a href="/admin/dataview.do">관리기능</a>
                     <% if ( isSuperAdmin )  { %>
