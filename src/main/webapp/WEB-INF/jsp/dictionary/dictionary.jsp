@@ -469,21 +469,7 @@
         						location.href = "/";
         					})
         				} else {
-        					//OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)<br>textStatus:"+textStatus+"<br><br>----------------<br>" +jqXHR.responseText +"<br>----------------");
-							
-        				    //구버전 : 파일경로 띄우기
-        				    //window.open(jqXHR.responseText);
-        					
-        					//신버전 : 데이터를 그대로 태우기 - 느림
-        					var blob = new Blob(["\ufeff"+jqXHR.responseText], {type: "text/csv;charset=utf-8"});
-        				    objURL = window.URL.createObjectURL(blob);
-        				    
-        				    var a = document.createElement('a');
-        				    a.href = objURL;
-        				    a.download = "DIC_KEYWORDS_" + $("#dicType .current").attr("value").toUpperCase() + ".csv";
-        				    a.click();				    
-        				    
-        				    
+        					OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)");
         				}
         			},	
         			complete: function() {	
