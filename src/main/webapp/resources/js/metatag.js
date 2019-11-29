@@ -1814,7 +1814,35 @@ function getTagsFromMcidSearchResult(code,stat,cnttag){
             APIS.METAS_META,
             {itemid: code},
             function(data){
+                //편집 히스토리 리셋
+            	debugger;
+                MetaHistoryManager.reset();
+            	
+            	//각 카테고리별로 전부 클리어
+            	$("dd#metaWhen > span.tag_add > a.btn_del.removeAll").click();
+            	$("dd#metaWhere > span.tag_add > a.btn_del.removeAll").click();
+            	$("dd#metaWhat > span.tag_add > a.btn_del.removeAll").click();
+            	$("dd#metaWho > span.tag_add > a.btn_del.removeAll").click();
+            	$("dd#metaEmotion > span.tag_add > a.btn_del.removeAll").click();
+            	$("dd#metaCharacter > span.tag_add > a.btn_del.removeAll").click();
+            	$("dd#metaUnclassified > span.tag_add > a.btn_del.removeAll").click();
+            	
+            	//$("dd#list_not_mapped > span.tag_add > a.btn_del.removeAll").click();
+            	
+            	$("dd#listSubGenre > span.tag_add > a.btn_del.removeAll").click();
+            	$("dd#listSearchKeywords > span.tag_add > a.btn_del.removeAll").click();
+            	$("dd#listRecoTarget > span.tag_add > a.btn_del.removeAll").click();
+            	$("dd#listMetasCharacter > span.tag_add > a.btn_del.removeAll").click();	//상세페이지에 없음
+            	$("dd#listRecoSituation > span.tag_add > a.btn_del.removeAll").click();
+            	$("dd#listAward > span.tag_add > a.btn_del.removeAll").click();
+            	//→ 히스토리에 추가됨
+            	
+            	debugger;
+            	
                 addMetaKeyword(data.RESULT.METASWHEN, "metaWhen", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	MetaHistoryManager.add(v.word,"when", v.word, "add");
+                	
                     return {
                         parentDom : parentTag,
                         tagPosition : "when",
@@ -1823,6 +1851,9 @@ function getTagsFromMcidSearchResult(code,stat,cnttag){
                         tagType: v.type };
                 });
                 addMetaKeyword(data.RESULT.METASWHERE, "metaWhere", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	MetaHistoryManager.add(v.word,"where", v.word, "add");
+                	
                     return {
                         parentDom : parentTag,
                         tagPosition : "where",
@@ -1831,6 +1862,9 @@ function getTagsFromMcidSearchResult(code,stat,cnttag){
                         tagType: v.type };
                 });
                 addMetaKeyword(data.RESULT.METASWHAT, "metaWhat", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	MetaHistoryManager.add(v.word,"what", v.word, "add");
+                	
                     return {
                         parentDom : parentTag,
                         tagPosition : "what",
@@ -1839,6 +1873,9 @@ function getTagsFromMcidSearchResult(code,stat,cnttag){
                         tagType: v.type };
                 });
                 addMetaKeyword(data.RESULT.METASWHO, "metaWho", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	MetaHistoryManager.add(v.word,"who", v.word, "add");
+                	
                     return {
                         parentDom : parentTag,
                         tagName: v.word,
@@ -1847,6 +1884,9 @@ function getTagsFromMcidSearchResult(code,stat,cnttag){
                         tagType: v.type };
                 });
                 addMetaKeyword(data.RESULT.METASEMOTION, "metaEmotion", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	MetaHistoryManager.add(v.word,"emotion", v.word, "add");
+                	
                     return {
                         parentDom : parentTag,
                         tagPosition : "emotion",
@@ -1856,6 +1896,9 @@ function getTagsFromMcidSearchResult(code,stat,cnttag){
                 });
 
                 addMetaKeyword(data.RESULT.METASCHARACTER, "metaCharacter", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	MetaHistoryManager.add(v.word,"character", v.word, "add");
+                	
                     return {
                         parentDom : parentTag,
                         tagPosition : "character",
@@ -1866,6 +1909,9 @@ function getTagsFromMcidSearchResult(code,stat,cnttag){
                 
                 //(이하 항목)
                 addMetaKeyword(data.RESULT.LIST_NOT_MAPPED, "metaUnclassified", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	//MetaHistoryManager.add(v.word,"list_not_mapped", v.word, "add");
+                	
                     return {
                         parentDom : parentTag,
                         tagName: v.word,
@@ -1876,31 +1922,51 @@ function getTagsFromMcidSearchResult(code,stat,cnttag){
                 
                 //태그정보 로딩 - 팝업창에서 로드할 때는 없는 정보
                 addMetaKeyword(data.RESULT.LIST_SUBGENRE, "listSubGenre", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	MetaHistoryManager.add(v.word,"listsubgenre", v.word, "add");
+                	
                     return {
                         parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: v.type, tagPosition: "listsubgenre", enableMenu: false };
                 });
 
                 addMetaKeyword(data.RESULT.LIST_SEARCHKEYWORDS, "listSearchKeywords", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	MetaHistoryManager.add(v,"listsearchkeywords", v, "add");
+                	
                     return {
                         parentDom : parentTag, tagName: v, tagRatio: 0, tagType: "", tagPosition: "listsearchkeywords",  enableMenu: false };
                 });
 
                 addMetaKeyword(data.RESULT.LIST_RECO_TARGET, "listRecoTarget", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	MetaHistoryManager.add(v.word,"listrecotarget", v.word, "add");
+                	
                     return {
                         parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: "", tagPosition: "listrecotarget",  enableMenu: false };
                 });
 
+/*
                 addMetaKeyword(data.RESULT.METASCHARACTER, "listMetasCharacter", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	MetaHistoryManager.add(v.word,"listMetasCharacter", v.word, "add");
+                	
                     return {
                         parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: "", tagPosition: "listMetasCharacter",  enableMenu: false };
                 });
+*/
 
                 addMetaKeyword(data.RESULT.LIST_RECO_SITUATION, "listRecoSituation", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	MetaHistoryManager.add(v.word,"listrecosituation", v.word, "add");
+                	
                     return {
                         parentDom : parentTag, tagName: v.word, tagRatio: 0, tagType: "", tagPosition: "listrecosituation", enableMenu: false };
                 });
 
                 addMetaKeyword(data.RESULT.LIST_AWARD, "listAward", function(v, parentTag){
+                	//읽어서 히스토리에 추가
+                	MetaHistoryManager.add(v,"listaward", v, "add");
+                	
                     return {
                         parentDom : parentTag, tagName: v, tagRatio: 0, tagType: "", tagPosition: "listaward", enableMenu: false };
                 });
@@ -1909,7 +1975,11 @@ function getTagsFromMcidSearchResult(code,stat,cnttag){
                 $("#ly_pop_mcidSearchResult").css("display","none");
                 
                 //편집 히스토리 리셋
-                MetaHistoryManager.reset();
+                //MetaHistoryManager.reset();
+                
+                //모든 항목 히스토리에 추가
+                
+                
             },
             function(){
                 console.log("Error")
