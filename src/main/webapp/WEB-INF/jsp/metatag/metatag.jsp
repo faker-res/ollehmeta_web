@@ -899,19 +899,22 @@
 
         OM_READY(function(){
 
-            dateRange.init({
-                domCheckAll: ".btn_allday",
-                domStartDate: "#startDate",
-                domEndDate:   "#endDate",
-                initStartDate: OM_UTIL.startDate(),
-                initEndDate: OM_UTIL.currentDate(),
-                onSelectStartDate: function(dateText){
-
-                },
-                onSelectEndDate: function(dateText){
-
-                }
-            });
+            //2019.12.02 달력 검색팝업이 원활히 표출될 수 있도록 0.5초 딜레이 적용
+            setTimeout(function() {
+                dateRange.init({
+                    domCheckAll: ".btn_allday",
+                    domStartDate: "#startDate",
+                    domEndDate:   "#endDate",
+                    initStartDate: OM_UTIL.startDate(),
+                    initEndDate: OM_UTIL.currentDate(),
+                    onSelectStartDate: function(dateText){
+                        console.log("metatag.jsp - onSelectStartDate - dateText = " + dateText);
+                    },
+                    onSelectEndDate: function(dateText){
+                        console.log("metatag.jsp - onSelectEndDate - dateText = " + dateText);
+                    }
+                });
+            }, 500);
 
             // 조회 결과 탭 이벤트
             $(".inquiryResult button").click(function () {
@@ -1163,7 +1166,7 @@
 				</colgroup>
 				<thead>
 					<tr>
-						<th>MCID&amp;SID</th>
+						<th>CID&amp;SID</th>
 						<th>제목</th>
 					</tr>
 				</thead>

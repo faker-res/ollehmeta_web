@@ -79,7 +79,7 @@ function OM_API(apiInfo,apiParam,successCallback,failCallback){
 
     $.ajax({
         url: "/v1/apis",
-        timeout: 20000,
+        timeout: 60000,
         method: "POST",
         data: param,
         dataType: "json",
@@ -131,10 +131,12 @@ var OM_DATE_PICKER = function (){
         $(this.domEndDate).val(settings.initEndDate);
 
         $(this.domStartDate).datepicker({
-            onSelect: settings.onSelectStartDate || this.onSelectStartDate
+            onSelect: settings.onSelectStartDate || this.onSelectStartDate,
+            dateFormat: 'yy-mm-dd'	//2019.12.02 on metatag.jsp
         });
         $(this.domEndDate).datepicker({
-            onSelect: settings.onSelectEndDate || this.onSelectEndDate
+            onSelect: settings.onSelectEndDate || this.onSelectEndDate,
+            dateFormat: 'yy-mm-dd'	//2019.12.02 on metatag.jsp
         });
 
         var thisObject = this;
