@@ -36,7 +36,9 @@ var DataViewTable = function() {
             "FT" : "승인불가",
             "RT" : "승인대기",
             "ST" : "태깅완료",
-            "Y"  : "수집대기"	//2019.11.25
+            "Y"  : "수집대기",	//2019.11.25
+            "CT" : "태깅불가",	//2019.12.04
+            "MG" : "중복"		//2019.12.04
         };
 
         $(data.RESULT.LIST_ITEMS).each(function(k,item) {
