@@ -941,7 +941,10 @@
             });
 
         });
-        searchExecute();
+        
+        setTimeout(function() {
+        	searchExecute();
+        },500);
     });
 
     var formData = function(){

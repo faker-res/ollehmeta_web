@@ -1389,16 +1389,10 @@ var MetaTable = function() {
             //테스트 코드
             //item.ITEMID = 10410;
         	
-        	//2019.11.27 자릿수 맞추기
-        	var strDumCode = "";
-        	if(item.CID.length == 10){
-        		strDumCode = "0001";
-        	}
-
             var html = "<tr>\
                         <td class='dv'><input type='checkbox' value=" + item.ITEMID + "></td>\
                         <td class='left'>" + item.TITLE + "</td>\
-                        <td>" + item.CID + strDumCode + "</td>\
+                        <td>" + item.CID + "</td>\
                         <td class='dv'>" + SEARCH_TYPE[item.TYPE] + "</td>\
                         <td>" + item.CNT_TAG + "</td>\
                         <td>" + item.REGID + "</td>\
@@ -1779,13 +1773,20 @@ function btnMcidSearch(){
         	$("#tblMcidSearchResult > tbody").empty();
         	
         	var strHtml = "";
+        	var strFontRed = "";	//"style='color:red;'";	//2019.12.03
         	var listItems = response.RESULT.LIST_ITEMS;
         	for(var idx in response.RESULT.LIST_ITEMS){
+        		if(MetaPopupInstance.movieInfo.RESULT.CID==listItems[idx].CID){
+        			strFontRed = 'style="color:red;"';
+        		}else{
+        			strFontRed = "";
+        		}
+        		
+        		
         		//태그정보 로딩 getTagsFromMcidSearchResult
-        		strHtml += 	'<tr onclick="getTagsFromMcidSearchResult('+listItems[idx].ITEMID+',\''+listItems[idx].STAT+'\','+listItems[idx].CNT_TAG+')" style="cursor:pointer">'+
-							'	<td>'+listItems[idx].CID+'</td>'+
-							//'	<td>'+listItems[idx].TITLE+'/' + listItems[idx].STAT + '/' + listItems[idx].CNT_TAG + '</td>'+	//for Test
-							'	<td>'+listItems[idx].TITLE+'</td>'+
+        		strHtml += 	'<tr onclick="getTagsFromMcidSearchResult('+listItems[idx].ITEMID+',\''+listItems[idx].STAT+'\','+listItems[idx].CNT_TAG + ',\''+listItems[idx].CID+'\')" style="cursor:pointer">'+
+							'	<td '+strFontRed+'>'+listItems[idx].CID+'</td>'+
+							'	<td '+strFontRed+'>'+listItems[idx].TITLE+'</td>'+
 							'</tr>';
         	}
         	$("#tblMcidSearchResult > tbody").append(strHtml);
@@ -1804,7 +1805,7 @@ function btnMcidSearch(){
 }
 
 //태그정보 로딩
-function getTagsFromMcidSearchResult(code,stat,cnttag){
+function getTagsFromMcidSearchResult(code,stat,cnttag,cid){
 	//편집중인 항목 제거
 	//$("input.metaUpdateInput").remove();
 	
@@ -1814,7 +1815,9 @@ function getTagsFromMcidSearchResult(code,stat,cnttag){
             APIS.METAS_META,
             {itemid: code},
             function(data){
-                //편집 히스토리 리셋
+            	MetaPopupInstance.movieInfo.RESULT.CID = cid;
+            	
+            	//편집 히스토리 리셋
             	debugger;
                 MetaHistoryManager.reset();
             	
