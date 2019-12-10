@@ -495,6 +495,7 @@ var MetaPopup = function() {
         this.itemId = settings.itemId;
         this.tagCnt = settings.tagCnt || 0;
         this.tagStat = settings.tagStat;
+        this.cidPop = settings.cidPop;
 
         // 영화 정보 초기화
         $(".layTop").remove();
@@ -519,7 +520,9 @@ var MetaPopup = function() {
         // 포스터는 CCUBE 데이터로 가져온다
 
         OM_API( APIS.METAS_C_CUBE,{
-            itemid: MetaPopupInstance.itemId
+            itemid: MetaPopupInstance.itemId,
+            //cid: MetaPopupInstance.movieInfo.RESULT.CID		//2019.12.06
+            cid: MetaPopupInstance.cidPop						//2019.12.10
         },function(response){
 
             var posterImgUrl = response.RESULT.POSTER_URL;
@@ -1231,7 +1234,9 @@ var MetaPopup = function() {
                         break;
                     case "CCUBE":
                         OM_API( APIS.METAS_C_CUBE,{
-                            itemid: MetaPopupInstance.itemId
+                            itemid: MetaPopupInstance.itemId,
+                            //cid: MetaPopupInstance.movieInfo.RESULT.CID		//2019.12.06
+                            cid: MetaPopupInstance.cidPop						//2019.12.10
                         },function(response){
 
                             $(".lypop_tab5 .ccube").html("");
@@ -1431,24 +1436,24 @@ var MetaTable = function() {
                         <td><button class='btn_white' value=" + item.ITEMID + ">수집</button></td>\
                         <td><button class='btn_white' value=" + item.ITEMID + ">추출</button></td>\
                         <td></td>\
-                        <td><button class='btn_white' value=" + item.ITEMID + " data-stat="+item.STAT+" data-tagcnt="+item.CNT_TAG+">조회</button></td>\
-                    </tr>";
+                        <td><button class='btn_white' value=" + item.ITEMID + " data-stat="+item.STAT+" data-tagcnt="+item.CNT_TAG+" data-cidpop="+item.CID_POP+">조회</button></td>\
+                    </tr>";	//2019.12.10 cidpop
                     break;
                 case "ST":
                     html += "\
                         <td><button class='btn_white' value=" + item.ITEMID + ">수집</button></td>\
                         <td><button class='btn_white' value=" + item.ITEMID + ">추출</button></td>\
                         <td></td>\
-                        <td><button class='btn_white' value=" + item.ITEMID + " data-stat="+item.STAT+" data-tagcnt="+item.CNT_TAG+">조회</button></td>\
-                    </tr>";
+                        <td><button class='btn_white' value=" + item.ITEMID + " data-stat="+item.STAT+" data-tagcnt="+item.CNT_TAG+" data-cidpop="+item.CID_POP+">조회</button></td>\
+                    </tr>";	//2019.12.10 cidpop
                     break;
                 default:
                     html += "\
                         <td><button class='btn_white' value=" + item.ITEMID + ">수집</button></td>\
                         <td><button class='btn_white' value=" + item.ITEMID + ">추출</button></td>\
                         <td></td>\
-                        <td><button class='btn_white' value=" + item.ITEMID + " data-stat="+item.STAT+" data-tagcnt="+item.CNT_TAG+">조회</button></td>\
-                    </tr>";
+                        <td><button class='btn_white' value=" + item.ITEMID + " data-stat="+item.STAT+" data-tagcnt="+item.CNT_TAG+" data-cidpop="+item.CID_POP+">조회</button></td>\
+                    </tr>";	//2019.12.10 cidpop
                     break;
             }
             $("tbody").append(html);
@@ -1636,6 +1641,7 @@ var MetaTable = function() {
             var itemId = $(this).val();
             var tagCnt = parseInt($(this).data("tagcnt"));
             var tagStat = $(this).data("stat");
+            var tagCidPop = $(this).data("cidpop");	//2019.12.10
             //if ( tagCnt != 0 ) {
             //    tagCnt = tagCnt -1;
             //}
@@ -1670,7 +1676,8 @@ var MetaTable = function() {
                                         data : data,
                                         tagCnt: tagCnt,
                                         tagStat: tagStat,
-                                        itemId: itemId
+                                        itemId: itemId,
+                                        cidPop: tagCidPop	//2019.12.10
                                     }).render();
                                 },
                                 function(){
@@ -1776,7 +1783,8 @@ function btnMcidSearch(){
         	var strFontRed = "";	//"style='color:red;'";	//2019.12.03
         	var listItems = response.RESULT.LIST_ITEMS;
         	for(var idx in response.RESULT.LIST_ITEMS){
-        		if(MetaPopupInstance.movieInfo.RESULT.CID==listItems[idx].CID){
+        		//if(MetaPopupInstance.movieInfo.RESULT.CID==listItems[idx].CID){
+        		if(MetaPopupInstance.cidPop==listItems[idx].CID){//2019.12.10
         			strFontRed = 'style="color:red;"';
         		}else{
         			strFontRed = "";
