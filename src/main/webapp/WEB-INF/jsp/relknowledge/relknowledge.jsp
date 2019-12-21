@@ -174,56 +174,56 @@ $("#btnUp").click(function(event) {
 			OM_ALERT("다운로드할 카테고리를 선택해 주십시오.");
 			return;
 		}
-		debugger;
-		Loading(true);
-		
-		var param = {	
-			apiUrl   : JSON.stringify({url : "/relknowledge/download/type",method : "GET"}),
-			apiParam : JSON.stringify({type : type}||{})
-		};
-
-		$.ajax({
-			url: "/v1/apis",
-			timeout: 200000,
-			method: "POST",
-			data: param,
-			dataType: "html",
-			success: function(data,textStatus,jqXHR){
-				//alert("result success");
-				OM_ALERT("다운로드가 완료되었습니다.");
-				
-			    //구버전 : 파일경로 띄우기
-			    //window.open(jqXHR.responseText);
-				
-				//신버전 : 데이터를 그대로 태우기 - 느림
-				var responseTextArr = jqXHR.responseText.split("::::");
-				var blob = new Blob(["\ufeff"+responseTextArr[1]], {type: "text/csv;charset=utf-8"});
-			    objURL = window.URL.createObjectURL(blob);
-			    
-			    var a = document.createElement('a');
-			    a.href = objURL;
-			    //a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + ".csv";
-			    //a.download = $("#cboFile > option:selected").val();
-			    a.download = responseTextArr[0];
-			    a.click();				    
-			},
-			error: function(jqXHR,textStatus,errorThrown){
-				//debugger;
-				//alert("result error");
-				if ( textStatus == "timeout" ) {
-					OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
-				} else if (typeof jqXHR.responseText != "undefined" && jqXHR.responseText == "apiSessionError" ) {
-					OM_ALERT("세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)", function() {
-						location.href = "/";
-					})
-				} else {
-					OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)");
-				}
-			},	
-			complete: function() {	
-				Loading(false);
-			}	
-		});
+		// debugger;
+		//Loading(true);
+		location.href='${BASE_URL}/relknowledge/download/type?type='+type;
+		// var param = {
+		// 	apiUrl   : JSON.stringify({url : "/relknowledge/download/type",method : "GET"}),
+		// 	apiParam : JSON.stringify({type : type}||{})
+		// };
+		//
+		// $.ajax({
+		// 	url: "/v1/apis",
+		// 	timeout: 200000,
+		// 	method: "POST",
+		// 	data: param,
+		// 	dataType: "html",
+		// 	success: function(data,textStatus,jqXHR){
+		// 		//alert("result success");
+		// 		OM_ALERT("다운로드가 완료되었습니다.");
+		//
+		// 	    //구버전 : 파일경로 띄우기
+		// 	    //window.open(jqXHR.responseText);
+		//
+		// 		//신버전 : 데이터를 그대로 태우기 - 느림
+		// 		var responseTextArr = jqXHR.responseText.split("::::");
+		// 		var blob = new Blob(["\ufeff"+responseTextArr[1]], {type: "text/csv;charset=utf-8"});
+		// 	    objURL = window.URL.createObjectURL(blob);
+		//
+		// 	    var a = document.createElement('a');
+		// 	    a.href = objURL;
+		// 	    //a.download = "VOD_RT_" + $("#cboType > option:selected").val().toUpperCase() + ".csv";
+		// 	    //a.download = $("#cboFile > option:selected").val();
+		// 	    a.download = responseTextArr[0];
+		// 	    a.click();
+		// 	},
+		// 	error: function(jqXHR,textStatus,errorThrown){
+		// 		//debugger;
+		// 		//alert("result error");
+		// 		if ( textStatus == "timeout" ) {
+		// 			OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 001)");
+		// 		} else if (typeof jqXHR.responseText != "undefined" && jqXHR.responseText == "apiSessionError" ) {
+		// 			OM_ALERT("세션이 종료 되었습니다. <br>재 로그인 시도 합니다.(에러 : 002)", function() {
+		// 				location.href = "/";
+		// 			})
+		// 		} else {
+		// 			OM_ALERT("API 서버 연결이 종료 되었습니다. <br>F5 시도 후 사용해 주세요.(에러 : 003)");
+		// 		}
+		// 	},
+		// 	complete: function() {
+		// 		Loading(false);
+		// 	}
+		// });
 	});
 	
 	
