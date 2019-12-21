@@ -1784,18 +1784,23 @@ function btnMcidSearch(){
         	var listItems = response.RESULT.LIST_ITEMS;
         	for(var idx in response.RESULT.LIST_ITEMS){
         		//if(MetaPopupInstance.movieInfo.RESULT.CID==listItems[idx].CID){
-        		if(MetaPopupInstance.cidPop==listItems[idx].CID){//2019.12.10
+        		if(MetaPopupInstance.cidPop==listItems[idx].CID && 'Y'==listItems[idx].STAT){//2019.12.10
         			strFontRed = 'style="color:red;"';
         		}else{
         			strFontRed = "";
         		}
-        		
+
+                //태그정보 로딩 getTagsFromMcidSearchResult
+                strHtml += 	'<tr>'+
+                    '	<td '+strFontRed+'>'+listItems[idx].CID+'</td>'+
+                    '	<td '+strFontRed+'>'+listItems[idx].TITLE+'('+listItems[idx].ITEMID+')</td>'+
+                    '</tr>';
         		
         		//태그정보 로딩 getTagsFromMcidSearchResult
-        		strHtml += 	'<tr onclick="getTagsFromMcidSearchResult('+listItems[idx].ITEMID+',\''+listItems[idx].STAT+'\','+listItems[idx].CNT_TAG + ',\''+listItems[idx].CID+'\')" style="cursor:pointer">'+
-							'	<td '+strFontRed+'>'+listItems[idx].CID+'</td>'+
-							'	<td '+strFontRed+'>'+listItems[idx].TITLE+'</td>'+
-							'</tr>';
+        		// strHtml += 	'<tr onclick="getTagsFromMcidSearchResult('+listItems[idx].ITEMID+',\''+listItems[idx].STAT+'\','+listItems[idx].CNT_TAG + ',\''+listItems[idx].CID+'\')" style="cursor:pointer">'+
+				// 			'	<td '+strFontRed+'>'+listItems[idx].CID+'</td>'+
+				// 			'	<td '+strFontRed+'>'+listItems[idx].TITLE+'</td>'+
+				// 			'</tr>';
         	}
         	$("#tblMcidSearchResult > tbody").append(strHtml);
         	
