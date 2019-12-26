@@ -1,5 +1,8 @@
 실행/개발을 위해 필요한 것(설정)
 
+ldap LIB : mvn 설치필요
+mvn install:install-file -Dpackaging=jar -Dfile=ADUtilSSL-1.0.0.jar -DgroupId=nets.ldap -DartifactId=ADUtilSSL -Dversion=1.0.0 -DgeneratePom=true
+
 개발용
 -Dspring.profiles.active=dev
 
